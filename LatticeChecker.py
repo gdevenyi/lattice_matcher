@@ -2,7 +2,7 @@
 ##              Lattice Checker              ##
 ###############################################
 
-from math import sqrt #imports sqrt() function
+import numpy # includes numpy.sqrt()
 
 # Choose file for substrate and film
 # Refer to documentation for details on input file
@@ -10,7 +10,7 @@ film_file = open("elements.txt", "r")
 substrate_file = open("semiconductors.txt", "r")
 matches_file = open("matches_es.csv", "w")
 
-tolerance = 8 #tolerance for lattice mismatch
+tolerance = 0.08 # percent tolerance for lattice mismatch
 
 def check_film_file(film_file, substrate_composition, substrate_symmetry, sub_a, sub_c):
     # searches the film file for matches with the substrate 
@@ -48,23 +48,23 @@ def cubic_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a, fil
         # cubic substrate
         original_ratio = sub_a/film_a
         ratio = ratio_cal(original_ratio)
-        mismatch = ((sub_a - (ratio*film_a)) / sub_a) * 100
+        mismatch = ((sub_a - (ratio*film_a)) / sub_a)
         if abs(mismatch) < tolerance:
             matches_file.write(film_comp + "," + film_sym + "," + sub_comp + "," + sub_sym + "," + str(mismatch) + "," + str(ratio) + "," + str(original_ratio) + "\n")
     elif sub_sym == "T":
         # tetragonal substrate
         original_a_ratio = sub_a/film_a
         a_ratio = ratio_cal(original_a_ratio)
-        a_mismatch = ((sub_a - (a_ratio*film_a)) / sub_a) * 100
+        a_mismatch = ((sub_a - (a_ratio*film_a)) / sub_a)
         if abs(a_mismatch) < tolerance:
             matches_file.write(film_comp + "," + film_sym + "," + sub_comp + "," + sub_sym + "," + str(a_mismatch) + "," + str(a_ratio) + "," + str(original_a_ratio) + "\n")
     elif sub_sym == "H":
         # hexagonal substrate 
-        original_ratio = sub_a/(sqrt(2.0)*film_a)
+        original_ratio = sub_a/(numpy.sqrt(2.0)*film_a)
         ratio = ratio_cal(original_ratio)
-        mismatch = ((sub_a - (ratio*film_a*sqrt(2.0))) / sub_a) * 100
+        mismatch = ((sub_a - (ratio*film_a*numpy.sqrt(2.0))) / sub_a)
         if abs(mismatch) < tolerance:
-            matches_file.write(film_comp + "," + film_sym + "(111)," + sub_comp + "," + sub_sym + "," + str(mismatch) + "," + str(ratio) + "," + str(original_ratio) + "\n")
+            matches_file.write(film_comp + "," + film_sym + " (111)," + sub_comp + "," + sub_sym + "," + str(mismatch) + "," + str(ratio) + "," + str(original_ratio) + "\n")
 
 def tetragonal_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a, film_c):
     # perform various mismatch and ratio checks for a tetragonal film
@@ -72,14 +72,14 @@ def tetragonal_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a
         # cubic substrate
         original_ratio = sub_a/film_a
         ratio = ratio_cal(original_ratio)
-        mismatch = ((sub_a - (ratio*film_a)) / sub_a) * 100
+        mismatch = ((sub_a - (ratio*film_a)) / sub_a)
         if abs(mismatch) < tolerance:
             matches_file.write(film_comp + "," + film_sym + "," + sub_comp + "," + sub_sym + "," + str(mismatch) + "," + str(ratio) + "," + str(original_ratio) + "\n")
     elif sub_sym == "T":
         # tetragonal substrate
         original_ratio = sub_a/film_a
         ratio = ratio_cal(original_ratio)
-        mismatch = ((sub_a - (ratio*film_a)) / sub_a) * 100
+        mismatch = ((sub_a - (ratio*film_a)) / sub_a)
         if abs(mismatch) < tolerance:
             matches_file.write(film_comp + "," + film_sym + "," + sub_comp + "," + sub_sym + "," + str(mismatch) + "," + str(ratio) + "," + str(original_ratio) + "\n")
     elif sub_sym == "H":
@@ -90,11 +90,11 @@ def hexagonal_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a,
     # perform various mismatch and ratio checks for a tetragonal film
     if sub_sym == "C":
         # cubic substrate
-        original_ratio = (sub_a*sqrt(2.0))/film_a
+        original_ratio = (sub_a*numpy.sqrt(2.0))/film_a
         ratio = ratio_cal(original_ratio)
-        mismatch = (((sqrt(2.0)*sub_a) - (ratio*film_a)) / (sqrt(2.0)*sub_a)) * 100
+        mismatch = (((numpy.sqrt(2.0)*sub_a) - (ratio*film_a)) / (numpy.sqrt(2.0)*sub_a))
         if abs(mismatch) < tolerance:
-            matches_file.write(film_comp + "," + film_sym + "," + sub_comp + "," + sub_sym + "(111)," + str(mismatch) + "," + str(ratio) + "," + str(original_ratio) + "\n")
+            matches_file.write(film_comp + "," + film_sym + "," + sub_comp + "," + sub_sym + " (111)," + str(mismatch) + "," + str(ratio) + "," + str(original_ratio) + "\n")
     elif sub_sym == "T":
         # tetragonal substrate
         pass
@@ -102,7 +102,7 @@ def hexagonal_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a,
         # hexagonal substrate
         original_ratio = sub_a/film_a
         ratio = ratio_cal(original_ratio)
-        mismatch = ((sub_a - (ratio*film_a)) / sub_a) * 100
+        mismatch = ((sub_a - (ratio*film_a)) / sub_a)
         if abs(mismatch) < tolerance:
             matches_file.write(film_comp + "," + film_sym + "," + sub_comp + "," + sub_sym + "," + str(mismatch) + "," + str(ratio) + "," + str(original_ratio) + "\n")
 
