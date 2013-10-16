@@ -1,3 +1,4 @@
+Composition	Symmetry	a	c
 Al2O3	H	4.758	12.992
 BaF2	C	6.196	0
 CaF2	C	5.462	0

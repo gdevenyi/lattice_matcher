@@ -1,3 +1,4 @@
+Composition	Symmetry	a	c
 Mg	H	3.2094	5.2108
 Al	C	4.0495	0
 Sc	H	3.309	5.2733

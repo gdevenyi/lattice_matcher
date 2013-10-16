@@ -1,3 +1,4 @@
+Composition	Symmetry	a	c
 C	C	3.56683	0
 Ge	C	5.64613	0
 Si	C	5.43095	0
