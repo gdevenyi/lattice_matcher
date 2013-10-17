@@ -3,15 +3,35 @@
 ###############################################
 
 import numpy # includes numpy.sqrt()
+import argparse # command line implementation
 
+
+#### Command line code ###
+# Set up argument parser
+parser = argparse.ArgumentParser(description="Software for calculating epitaxial lattice matches considering symmetries of different crystal systems.")
+# Add arguments needed
+parser.add_argument("film", type=str, help="File with film material data")
+parser.add_argument("substrate", type=str, help="File with substrate material data")
+parser.add_argument("tolerance", type=float, help="Tolerance level for mismatch. Enter percent as a decimal")
+# Parse all arguments
+args = parser.parse_args()
+# Create a label for the matches file. [:-4] strips last 4 characters of file name string
+matches_file_label = args.film[:-4] + "_on_" + args.substrate[:-4] + ".txt" # Added ".txt" to specify type of file
+matches_file = open(matches_file_label, "w")
+# Read input .txt files using numpy.genfromtxt()
+film_file = numpy.genfromtxt(args.film, delimiter="\t", dtype=None)
+substrate_file = numpy.genfromtxt(args.substrate, delimiter="\t", dtype=None)
+tolerance = args.tolerance # Percent tolerance for lattice mismatch as a decimal
+
+'''
+### Fixed input code ###
 # Output file will be a tab delimited .txt file
 matches_file = open("matches_es.txt", "w")
-
 # Read input .txt files using numpy.genfromtxt
 film_file = numpy.genfromtxt("elements.txt", skip_header=1, delimiter="\t", dtype=None)
 substrate_file = numpy.genfromtxt("semiconductors.txt", skip_header=1, delimiter="\t", dtype=None)
-
-tolerance = 0.08 # percent tolerance for lattice mismatch
+tolerance = 0.08 # Percent tolerance for lattice mismatch as a decimal
+'''
 
 def check_film_file(film_file, substrate_composition, substrate_symmetry, sub_a, sub_c):
     # Searches the film file for matches with the substrate 
@@ -42,10 +62,10 @@ def cubic_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a, fil
             matches_file.write("{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch, ratio, original_ratio))
     elif sub_sym == "T":
         # tetragonal substrate
-        original_a_ratio = sub_a/film_a
-        a_ratio = ratio_cal(original_a_ratio)
-        a_mismatch = ((sub_a - (a_ratio*film_a)) / sub_a)
-        if abs(a_mismatch) < tolerance:
+        original_ratio = sub_a/film_a
+        ratio = ratio_cal(original_ratio)
+        mismatch = ((sub_a - (ratio*film_a)) / sub_a)
+        if abs(mismatch) < tolerance:
             matches_file.write("{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch, ratio, original_ratio))
     elif sub_sym == "H":
         # hexagonal substrate 
