@@ -19,8 +19,8 @@ args = parser.parse_args()
 matches_file_label = args.film[:-4] + "_on_" + args.substrate[:-4] + ".txt" # Added ".txt" to specify type of file
 matches_file = open(matches_file_label, "w")
 # Read input .txt files using numpy.genfromtxt()
-film_file = numpy.genfromtxt(args.film, delimiter="\t", dtype=None)
-substrate_file = numpy.genfromtxt(args.substrate, delimiter="\t", dtype=None)
+film_file = numpy.genfromtxt(args.film, skip_header=1, delimiter="\t", dtype=None)
+substrate_file = numpy.genfromtxt(args.substrate, skip_header=1, delimiter="\t", dtype=None)
 tolerance = args.tolerance # Percent tolerance for lattice mismatch as a decimal
 
 '''
@@ -123,8 +123,8 @@ def ratio_cal(original_ratio):
         ratio = round(original_ratio)
     return ratio
 
-# Call lattice_check to perform the check
-lattice_check(film_file, substrate_file)
-
-# Close any open files
-matches_file.close()
+if __name__ == "__main__":
+    # Call lattice_check to perform the check
+    lattice_check(film_file, substrate_file)
+    # Close any open files
+    matches_file.close()
