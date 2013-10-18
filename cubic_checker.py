@@ -87,7 +87,7 @@ def ratio_check(c_value, a_value):
     #check to see if ratio of a and c values for hexagonal and tetragonal symmetries is close to sqrt(2)
     percent_off = ((c_value/(numpy.sqrt(2.0)*a_value)) - 1)
     return abs(percent_off) #returns a percentage of how far off the ratio is
-    
-lattice_check(film_file, substrate_file)
 
-matches_file.close()
+if __name__ == "__main__":
+    lattice_check(film_file, substrate_file)
+    matches_file.close()
