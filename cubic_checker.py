@@ -31,7 +31,7 @@ def lattice_check(film_file, substrate_file):
     for i, l in enumerate(substrate_file):
         search_film_file(film_file, substrate_file[i][0], substrate_file[i][1], substrate_file[i][2], substrate_file[i][3])
 
-def ratio_cal(original_ratio):
+def round_ratio(original_ratio):
     #rounds the original ratio
     if original_ratio < 1:
         ratio = 1.0 / round(1.0/original_ratio)
@@ -42,46 +42,45 @@ def ratio_cal(original_ratio):
 def cubic_sub(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a, film_c):
     # called if the substrate has cubic symmetry
     original_ratio = sub_a/film_a
-    ratio = ratio_cal(original_ratio)
+    ratio = round_ratio(original_ratio)
     mismatch = ((sub_a - (ratio*film_a)) / sub_a)
     if abs(mismatch) < tolerance:
         matches_file.write("{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch, ratio, original_ratio))
 
 def tetragonal_sub(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a, film_c):
     # called if the substrate has tetragonal symmetry
-    original_ratio1 = sub_a/film_a #ratio of a-values
-    original_ratio2 = sub_c/(numpy.sqrt(2.0)*film_a) #cubic (110) and a-plane tetragonal c-value ratio
-    ratio1 = ratio_cal(original_ratio1)
-    ratio2 = ratio_cal(original_ratio2)
-    mismatch1 = ((sub_a - (ratio1*film_a)) / sub_a)
-    mismatch2 = ((sub_c - (ratio2*numpy.sqrt(2.0)*film_a)) / sub_c) 
-    if abs(mismatch1) < tolerance:
-        matches_file.write("{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch1, ratio1, original_ratio1))
-    if ratio_check(sub_c, sub_a) < tolerance and abs(mismatch1) < tolerance: #check if ratio of sub_c/sub_a is close to sqrt(2.0). If not then cubic (110) will definitely not match
-        matches_file.write("{}\t{} (110)\t{}\t{} (a-plane)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch1, ratio1, original_ratio1, mismatch2, ratio2, original_ratio2))
-        matches_file.write(film_comp + "," + film_sym + " (110)," + sub_comp + "," + sub_sym + " (a-plane)," + str(mismatch1) + "," + str(ratio1) + "," + str(original_ratio1) + "," + str(mismatch2) + "," + str(ratio2) + "," + str(original_ratio2)+ "\n")
+    original_ratio_a = sub_a/film_a #ratio of a-values
+    original_ratio_c = sub_c/(numpy.sqrt(2.0)*film_a) #cubic (110) and a-plane tetragonal c-value ratio
+    ratio_a = round_ratio(original_ratio_a)
+    ratio_c = round_ratio(original_ratio_c)
+    mismatch_a = ((sub_a - (ratio_a*film_a)) / sub_a)
+    mismatch_c = ((sub_c - (ratio_c*numpy.sqrt(2.0)*film_a)) / sub_c) 
+    if abs(mismatch_a) < tolerance:
+        matches_file.write("{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a))
+    if ratio_check(sub_c, sub_a) < tolerance and abs(mismatch_a) < tolerance: #check if ratio of sub_c/sub_a is close to sqrt(2.0). If not then cubic (110) will definitely not match
+        matches_file.write("{}\t{} (110)\t{}\t{} (a-plane)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c, ratio_c, original_ratio_c))
 
 def hexagonal_sub(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a, film_c):
     # called if the substrate has hexagonal symmetry
-    original_ratio1 = sub_a/(numpy.sqrt(2.0)*film_a) #ratio of a-values for cubic (111) matches
-    original_ratio2 = sub_a/film_a #ratio of a-values
-    original_ratio3 = sub_c/(numpy.sqrt(2.0)*film_a) #cubic (110) on a-plane hexagonal c-value ratio
-    original_ratio4 = numpy.sqrt((sub_c**2)+(3*(sub_a**2)))/(numpy.sqrt(2.0)*film_a) #cubic (110) on r-plane hexagonal c-value ratio
-    ratio1 = ratio_cal(original_ratio1)
-    ratio2 = ratio_cal(original_ratio2)
-    ratio3 = ratio_cal(original_ratio3)
-    ratio4 = ratio_cal(original_ratio4)
-    mismatch1 = ((sub_a - (ratio1*film_a*numpy.sqrt(2.0))) / sub_a)
-    mismatch2 = ((sub_a - (ratio2*film_a)) / sub_a)
-    mismatch3 = ((sub_c - (ratio3*film_a*numpy.sqrt(2.0))) / sub_c)
-    mismatch4 = ((numpy.sqrt((sub_c**2)+(3*(sub_a**2))) - (ratio3*film_a*numpy.sqrt(2.0))) / numpy.sqrt((sub_c**2)+(3*(sub_a**2))))
-    temp_c = numpy.sqrt((sub_c**2)+(3*(sub_a**2))) #side length for camparison of r-plane hex side lengths
-    if abs(mismatch1) < tolerance:
-        matches_file.write("{}\t{} (111)\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch1, ratio1, original_ratio1))
-    if abs(mismatch2) < tolerance and ratio_check(sub_c, sub_a) < tolerance:
-        matches_file.write("{}\t{} (110)\t{}\t{} (a-plane)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch2, ratio2, original_ratio2, mismatch3, ratio3, original_ratio3))
-    if abs(mismatch2) < tolerance and ratio_check(temp_c, sub_a) < tolerance:
-        matches_file.write("{}\t{} (110)\t{}\t{} (r-plane)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch2, ratio2, original_ratio2, mismatch4, ratio4, original_ratio4))
+    original_ratio_a_111 = sub_a/(numpy.sqrt(2.0)*film_a) #ratio of a-values for cubic (111) matches
+    original_ratio_a = sub_a/film_a #ratio of a-values
+    original_ratio_c = sub_c/(numpy.sqrt(2.0)*film_a) #cubic (110) on a-plane hexagonal c-value ratio
+    original_ratio_c_r = numpy.sqrt((sub_c**2)+(3*(sub_a**2)))/(numpy.sqrt(2.0)*film_a) #cubic (110) on r-plane hexagonal c-value ratio
+    ratio_a_111 = round_ratio(original_ratio_a_111)
+    ratio_a = round_ratio(original_ratio_a)
+    ratio_c = round_ratio(original_ratio_c)
+    ratio_c_r = round_ratio(original_ratio_c_r)
+    mismatch_a_111 = ((sub_a - (ratio_a_111*film_a*numpy.sqrt(2.0))) / sub_a)
+    mismatch_a = ((sub_a - (ratio_a*film_a)) / sub_a)
+    mismatch_c = ((sub_c - (ratio_c*film_a*numpy.sqrt(2.0))) / sub_c)
+    mismatch_c_r = ((numpy.sqrt((sub_c**2)+(3*(sub_a**2))) - (ratio_c_r*film_a*numpy.sqrt(2.0))) / numpy.sqrt((sub_c**2)+(3*(sub_a**2))))
+    r_plane_c = numpy.sqrt((sub_c**2)+(3*(sub_a**2))) #side length for camparison of r-plane hex side lengths
+    if abs(mismatch_a_111) < tolerance:
+        matches_file.write("{}\t{} (111)\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a_111, ratio_a_111, original_ratio_a_111))
+    if abs(mismatch_a) < tolerance and ratio_check(sub_c, sub_a) < tolerance:
+        matches_file.write("{}\t{} (110)\t{}\t{} (a-plane)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c, ratio_c, original_ratio_c))
+    if abs(mismatch_a) < tolerance and ratio_check(r_plane_c, sub_a) < tolerance:
+        matches_file.write("{}\t{} (110)\t{}\t{} (r-plane)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c_r, ratio_c_r, original_ratio_c_r))
 
 def ratio_check(c_value, a_value):
     #check to see if ratio of a and c values for hexagonal and tetragonal symmetries is close to sqrt(2)
