@@ -41,11 +41,11 @@ def round_ratio(original_ratio):
 
 def cubic_sub(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a, film_c):
     # called if the substrate has cubic symmetry
-    original_ratio = sub_a/film_a
-    ratio = round_ratio(original_ratio)
-    mismatch = ((sub_a - (ratio*film_a)) / sub_a)
-    if abs(mismatch) < tolerance:
-        matches_file.write("{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch, ratio, original_ratio))
+    original_ratio_a = sub_a/film_a
+    ratio_a = round_ratio(original_ratio_a)
+    mismatch_a = ((sub_a - (ratio_a*film_a)) / sub_a)
+    if abs(mismatch_a) < tolerance:
+        matches_file.write("{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a))
 
 def tetragonal_sub(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a, film_c):
     # called if the substrate has tetragonal symmetry
