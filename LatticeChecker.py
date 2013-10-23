@@ -23,16 +23,6 @@ film_file = numpy.genfromtxt(args.film, skip_header=1, delimiter="\t", dtype=Non
 substrate_file = numpy.genfromtxt(args.substrate, skip_header=1, delimiter="\t", dtype=None)
 tolerance = args.tolerance # Percent tolerance for lattice mismatch as a decimal
 
-'''
-### Fixed input code ###
-# Output file will be a tab delimited .txt file
-matches_file = open("matches_es.txt", "w")
-# Read input .txt files using numpy.genfromtxt
-film_file = numpy.genfromtxt("elements.txt", skip_header=1, delimiter="\t", dtype=None)
-substrate_file = numpy.genfromtxt("semiconductors.txt", skip_header=1, delimiter="\t", dtype=None)
-tolerance = 0.08 # Percent tolerance for lattice mismatch as a decimal
-'''
-
 def check_film_file(film_file, substrate_composition, substrate_symmetry, sub_a, sub_c):
     # Searches the film file for matches with the substrate 
     for i, l in enumerate(film_file):
