@@ -1,4 +1,4 @@
-Composition	Symmetry	a	c
+#Composition	Symmetry	a	c
 Al2O3	H	4.758	12.992
 AlN	H	3.111	4.978
 Cd	H	2.9794	5.6186

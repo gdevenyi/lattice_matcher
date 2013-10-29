@@ -1,4 +1,4 @@
-Composition	Symmetry	a	c
+#Composition	Symmetry	a	c
 Ag	C	4.0853	0
 Al	C	4.0495	0
 AlAs	C	5.6605	0

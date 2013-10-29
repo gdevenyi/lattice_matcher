@@ -1,4 +1,4 @@
-Composition	Symmetry	a	c
+#Composition	Symmetry	a	c
 BaTiO3	T	3.99	4.04
 In	T	3.2523	4.9461
 L2-xSrxCO	T	3.763	13.2628
