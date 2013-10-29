@@ -80,7 +80,7 @@ def cubic_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a, fil
             matches_file.write("{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a))
         if abs(mismatch_45) < tolerance:
             matches_file.write("{}\t{} (45 deg)\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_45, ratio_45, original_ratio_45))
-        if ratio_check(sub_c, sub_a) < tolerance and abs(mismatch_a) < tolerance: #check if ratio of sub_c/sub_a is close to sqrt(2.0). If not then cubic (110) will definitely not match
+        if ratio_check(sub_c, sub_a) < tolerance and abs(mismatch_c) < tolerance and abs(mismatch_a) < tolerance: 
             matches_file.write("{}\t{} (110)\t{}\t{} (a-plane)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c, ratio_c, original_ratio_c))
     elif sub_sym == "H":
         # called if the substrate has hexagonal symmetry
@@ -99,9 +99,9 @@ def cubic_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a, fil
         r_plane_c = numpy.sqrt((sub_c**2)+(3*(sub_a**2))) #side length for camparison of r-plane hex side lengths
         if abs(mismatch_a_111) < tolerance:
             matches_file.write("{}\t{} (111)\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a_111, ratio_a_111, original_ratio_a_111))
-        if abs(mismatch_a) < tolerance and ratio_check(sub_c, sub_a) < tolerance:
+        if ratio_check(sub_c, sub_a) < tolerance and abs(mismatch_c) and abs(mismatch_a) < tolerance:
             matches_file.write("{}\t{} (110)\t{}\t{} (a-plane)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c, ratio_c, original_ratio_c))
-        if abs(mismatch_a) < tolerance and ratio_check(r_plane_c, sub_a) < tolerance:
+        if ratio_check(r_plane_c, sub_a) < tolerance and abs(mismatch_c_r) and abs(mismatch_a) < tolerance:
             matches_file.write("{}\t{} (110)\t{}\t{} (r-plane)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c_r, ratio_c_r, original_ratio_c_r))
 
 def tetragonal_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a, film_c):
@@ -125,7 +125,7 @@ def tetragonal_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a
             matches_file.write("{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a))
         if abs(mismatch_45) < tolerance:
             matches_file.write("{}\t{} (45 deg)\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_45, ratio_45, original_ratio_45))
-        if ratio_check(film_c, film_a) < tolerance and abs(mismatch_a) < tolerance:
+        if ratio_check(film_c, film_a) < tolerance and abs(mismatch_c) < tolerance and abs(mismatch_a) < tolerance:
             matches_file.write("{}\t{} (a-plane)\t{}\t{} (110)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c, ratio_c, original_ratio_c))
     elif sub_sym == "T":
         # called if the substrate has tetragonal symmetry
@@ -178,9 +178,9 @@ def hexagonal_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a,
         mismatch_c_r = ((numpy.sqrt(2.0)*sub_a - ratio_c_r*r_plane_c) / numpy.sqrt(2.0)*sub_a)
         if abs(mismatch_a_111) < tolerance:
             matches_file.write("{}\t{}\t{}\t{} (111)\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a_111, ratio_a_111, original_ratio_a_111))
-        if abs(mismatch_a) < tolerance and ratio_check(film_c, film_a) < tolerance:
+        if ratio_check(film_c, film_a) < tolerance and abs(mismatch_c) < tolerance and abs(mismatch_a) < tolerance:
             matches_file.write("{}\t{} (a-plane)\t{}\t{} (110)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c, ratio_c, original_ratio_c))
-        if abs(mismatch_a) < tolerance and ratio_check(r_plane_c, film_a) < tolerance:
+        if ratio_check(r_plane_c, film_a) < tolerance and abs(mismatch_c) < tolerance and abs(mismatch_c) < tolerance:
             matches_file.write("{}\t{} (r-plane)\t{}\t{} (110)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c_r, ratio_c_r, original_ratio_c_r))
     elif sub_sym == "T":
         # called if the substrate has tetragonal symmetry
