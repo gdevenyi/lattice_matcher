@@ -44,7 +44,7 @@ def lattice_check(film_file, substrate_file):
     Takes a substrate file and film file as input.
     Outputs a tab delimited .txt file.
     """
-    matches_file.write("Film\tSymmetry\tSubstrate\tSymmetry\tMismatch\tRounded Ratio\tOriginal Ratio\tC Mismatch\tC Rounded Ratio\tC Original Ratio\n")
+    matches_file.write("#Film\tSymmetry\tSubstrate\tSymmetry\tMismatch\tRounded Ratio\tOriginal Ratio\tC Mismatch\tC Rounded Ratio\tC Original Ratio\n")
     for i, l in enumerate(substrate_file):
         check_film_file(film_file, substrate_file[i][0], substrate_file[i][1], substrate_file[i][2], substrate_file[i][3])
 
