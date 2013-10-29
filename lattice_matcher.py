@@ -56,20 +56,30 @@ def cubic_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a, fil
     if sub_sym == "C":
         # called if the substrate has cubic symmetry
         original_ratio_a = sub_a/film_a
+        original_ratio_45 = (numpy.sqrt(2.0)*sub_a)/film_a #cubic film rotated 45 degrees with respect to the substrate
         ratio_a = round_ratio(original_ratio_a)
+        ratio_45 = round_ratio(original_ratio_45)
         mismatch_a = ((sub_a - (ratio_a*film_a)) / sub_a)
+        mismatch_45 = (((numpy.sqrt(2.0)*sub_a) - (ratio_45*film_a)) / (numpy.sqrt(2.0)*sub_a))
         if abs(mismatch_a) < tolerance:
             matches_file.write("{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a))
+        if abs(mismatch_45) < tolerance:
+            matches_file.write("{}\t{} (45 deg)\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_45, ratio_45, original_ratio_45))
     elif sub_sym == "T":
         # called if the substrate has tetragonal symmetry
         original_ratio_a = sub_a/film_a #ratio of a-values
+        original_ratio_45 = (numpy.sqrt(2.0)*sub_a)/film_a #cubic film rotated 45 degrees with respect to the substrate square face
         original_ratio_c = sub_c/(numpy.sqrt(2.0)*film_a) #cubic (110) and a-plane tetragonal c-value ratio
         ratio_a = round_ratio(original_ratio_a)
+        ratio_45 = round_ratio(original_ratio_45)
         ratio_c = round_ratio(original_ratio_c)
         mismatch_a = ((sub_a - (ratio_a*film_a)) / sub_a)
+        mismatch_45 = (((numpy.sqrt(2.0)*sub_a) - (ratio_45*film_a)) / (numpy.sqrt(2.0)*sub_a))
         mismatch_c = ((sub_c - (ratio_c*numpy.sqrt(2.0)*film_a)) / sub_c) 
         if abs(mismatch_a) < tolerance:
             matches_file.write("{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a))
+        if abs(mismatch_45) < tolerance:
+            matches_file.write("{}\t{} (45 deg)\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_45, ratio_45, original_ratio_45))
         if ratio_check(sub_c, sub_a) < tolerance and abs(mismatch_a) < tolerance: #check if ratio of sub_c/sub_a is close to sqrt(2.0). If not then cubic (110) will definitely not match
             matches_file.write("{}\t{} (110)\t{}\t{} (a-plane)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c, ratio_c, original_ratio_c))
     elif sub_sym == "H":
@@ -103,22 +113,32 @@ def tetragonal_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a
     if sub_sym == "C":
         # called if the substrate has cubic symmetry
         original_ratio_a = sub_a/film_a #tetragonal against cubic a-values
+        original_ratio_45 = (numpy.sqrt(2.0)*sub_a)/film_a #tetragonal film rotated 45 degrees with respect to the substrate
         original_ratio_c = (numpy.sqrt(2.0)*sub_a)/film_c # tetragonal c-value against cubic (110) 'c-value'
         ratio_a = round_ratio(original_ratio_a)
+        ratio_45 = round_ratio(original_ratio_45)
         ratio_c = round_ratio(original_ratio_c)
         mismatch_a = ((sub_a - (ratio_a*film_a)) / sub_a)
+        mismatch_45 = (((numpy.sqrt(2.0)*sub_a) - (ratio_45*film_a)) / (numpy.sqrt(2.0)*sub_a))
         mismatch_c = (((numpy.sqrt(2.0)*sub_a) - (ratio_c*film_a)) / (numpy.sqrt(2.0)*sub_a))
         if abs(mismatch_a) < tolerance:
             matches_file.write("{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a))
+        if abs(mismatch_45) < tolerance:
+            matches_file.write("{}\t{} (45 deg)\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_45, ratio_45, original_ratio_45))
         if ratio_check(film_c, film_a) < tolerance and abs(mismatch_a) < tolerance:
             matches_file.write("{}\t{} (a-plane)\t{}\t{} (110)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c, ratio_c, original_ratio_c))
     elif sub_sym == "T":
         # called if the substrate has tetragonal symmetry
         original_ratio = sub_a/film_a
+        original_ratio_45 = (numpy.sqrt(2.0)*sub_a)/film_a #tetragonal film rotated 45 degrees with respect to the substrate
         ratio = round_ratio(original_ratio)
+        ratio_45 = round_ratio(original_ratio_45)
         mismatch = ((sub_a - (ratio*film_a)) / sub_a)
+        mismatch_45 = (((numpy.sqrt(2.0)*sub_a) - (ratio_45*film_a)) / (numpy.sqrt(2.0)*sub_a))
         if abs(mismatch) < tolerance:
             matches_file.write("{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch, ratio, original_ratio))
+        if abs(mismatch_45) < tolerance:
+            matches_file.write("{}\t{} (45 deg)\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_45, ratio_45, original_ratio_45))
     elif sub_sym == "H":
         # called if the substrate has hexagonal symmetry
         original_ratio_a = sub_a/film_a #tetragonal against hexagonal a-values
