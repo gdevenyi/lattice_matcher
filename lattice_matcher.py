@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 ###############################################
-##              Lattice Checker              ##
+##              Lattice Matcher              ##
 ###############################################
 
 import numpy # includes numpy.sqrt()
@@ -24,7 +24,7 @@ film_file = numpy.genfromtxt(args.film, comments="#", delimiter="\t", dtype=None
 substrate_file = numpy.genfromtxt(args.substrate, comments="#", delimiter="\t", dtype=None)
 tolerance = args.tolerance # Percent tolerance for lattice mismatch as a decimal
 
-def check_film_file(film_file, substrate_composition, substrate_symmetry, sub_a, sub_c):
+def film_substrate_comparison(film_file, substrate_composition, substrate_symmetry, sub_a, sub_c):
     """Passes values to various functions to perform mismatch calculations.
 
     Args:
@@ -45,7 +45,7 @@ def check_film_file(film_file, substrate_composition, substrate_symmetry, sub_a,
         elif film_file[i][1] == "H":
             hexagonal_film(film_file[i][0], film_file[i][1], substrate_composition, substrate_symmetry, sub_a, sub_c, film_file[i][2], film_file[i][3])
 
-def lattice_check(film_file, substrate_file):
+def lattice_matcher(film_file, substrate_file):
     """Creates a file of all acceptable lattice symmetry matches for two input database files.
 
     Args:
@@ -58,7 +58,7 @@ def lattice_check(film_file, substrate_file):
     """
     matches_file.write("#Film\tSymmetry\tSubstrate\tSymmetry\tMismatch\tRounded Ratio\tOriginal Ratio\tC Mismatch\tC Rounded Ratio\tC Original Ratio\n")
     for i, l in enumerate(substrate_file):
-        check_film_file(film_file, substrate_file[i][0], substrate_file[i][1], substrate_file[i][2], substrate_file[i][3])
+        film_substrate_comparison(film_file, substrate_file[i][0], substrate_file[i][1], substrate_file[i][2], substrate_file[i][3])
 
 def cubic_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a, film_c):
     """Performs mismatch and ratio checks for a cubic film on various substrates.
@@ -286,6 +286,6 @@ def ratio_check(c_value, a_value):
 
 if __name__ == "__main__":
     # Call lattice_check to perform the check
-    lattice_check(film_file, substrate_file)
+    lattice_matcher(film_file, substrate_file)
     # Close any open files
     matches_file.close()
