@@ -19,8 +19,8 @@ args = parser.parse_args()
 matches_file_label = args.film[:-4] + "_on_" + args.substrate[:-4] + ".txt" # Added ".txt" to specify type of file
 matches_file = open(matches_file_label, "w")
 # Read input .txt files using numpy.genfromtxt()
-film_file = numpy.genfromtxt(args.film, skip_header=1, delimiter="\t", dtype=None)
-substrate_file = numpy.genfromtxt(args.substrate, skip_header=1, delimiter="\t", dtype=None)
+film_file = numpy.genfromtxt(args.film, comments="#", delimiter="\t", dtype=None)
+substrate_file = numpy.genfromtxt(args.substrate, comments="#", delimiter="\t", dtype=None)
 tolerance = args.tolerance # Percent tolerance for lattice mismatch as a decimal
 
 def check_film_file(film_file, substrate_composition, substrate_symmetry, sub_a, sub_c):
