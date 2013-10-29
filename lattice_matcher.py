@@ -24,7 +24,11 @@ substrate_file = numpy.genfromtxt(args.substrate, comments="#", delimiter="\t", 
 tolerance = args.tolerance # Percent tolerance for lattice mismatch as a decimal
 
 def check_film_file(film_file, substrate_composition, substrate_symmetry, sub_a, sub_c):
-    # Searches the film file for matches with the substrate 
+    """
+    Search a database film file for matches with the substrate material.
+    Takes a film file as well as the substrate composition, symmetry and lattice constants (a,c) as input.
+    Calls functions based on film material symmetry to handle mismatch calculations.
+    """
     for i, l in enumerate(film_file):
         if film_file[i][1] == "C":
             cubic_film(film_file[i][0], film_file[i][1], substrate_composition, substrate_symmetry, sub_a, sub_c, film_file[i][2], film_file[i][3])
@@ -34,15 +38,21 @@ def check_film_file(film_file, substrate_composition, substrate_symmetry, sub_a,
             hexagonal_film(film_file[i][0], film_file[i][1], substrate_composition, substrate_symmetry, sub_a, sub_c, film_file[i][2], film_file[i][3]) 
 
 def lattice_check(film_file, substrate_file):
-    # Reads the material in the substrate list and searches the entire film file for matches
-    # Read the next substrate material and search the film file again
+    """
+    Reads material data from a substrate file and calls a function to examine the relation of the data to information in a film file.
+    Takes a substrate file and film file as input.
+    Outputs a tab delimited .txt file.
+    """
     matches_file.write("Film\tSymmetry\tSubstrate\tSymmetry\tMismatch\tRounded Ratio\tOriginal Ratio\tC Mismatch\tC Rounded Ratio\tC Original Ratio\n")
     for i, l in enumerate(substrate_file):
         check_film_file(film_file, substrate_file[i][0], substrate_file[i][1], substrate_file[i][2], substrate_file[i][3])
 
 def cubic_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a, film_c):
-    # perform various mismatch and ratio checks for a cubic film
-    # saves matches to a CSV files with title given above
+    """
+    Performs various mismatch and ratio checks for a cubic film.
+    Takes composition, symmetry and lattice constants (a,c) from both the film and substrate as input.
+    Saves matches to a tab delimited .txt file.
+    """
     if sub_sym == "C":
         # called if the substrate has cubic symmetry
         original_ratio_a = sub_a/film_a
@@ -85,7 +95,11 @@ def cubic_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a, fil
             matches_file.write("{}\t{} (110)\t{}\t{} (r-plane)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c_r, ratio_c_r, original_ratio_c_r))
 
 def tetragonal_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a, film_c):
-    # perform various mismatch and ratio checks for a tetragonal film
+    """
+    Performs various mismatch and ratio checks for a tetragonal film.
+    Takes composition, symmetry and lattice constants (a,c) from both the film and substrate as input.
+    Saves matches to a tab delimited .txt file.
+    """
     if sub_sym == "C":
         # called if the substrate has cubic symmetry
         original_ratio_a = sub_a/film_a #tetragonal against cubic a-values
@@ -122,7 +136,11 @@ def tetragonal_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a
             matches_file.write("{}\t{} (a-plane)\t{}\t{} (r-plane)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c_r, ratio_c_r, original_ratio_c_r))
 
 def hexagonal_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a, film_c):
-    # perform various mismatch and ratio checks for a tetragonal film
+    """
+    Performs various mismatch and ratio checks for a hexagonal film.
+    Takes composition, symmetry and lattice constants (a,c) from both the film and substrate as input.
+    Saves matches to a tab delimited .txt file.
+    """
     if sub_sym == "C":
         # called if the substrate has cubic symmetry
         r_plane_c = numpy.sqrt((sub_c**2)+(3*(sub_a**2))) # 'c-value' of the r-plane hex
@@ -169,7 +187,10 @@ def hexagonal_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a,
             matches_file.write("{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a))
             
 def round_ratio(original_ratio):
-    # rounds the original ratio
+    """
+    Rounds a ratio to an integer value.
+    Takes a number as input and outputs a rounded value.
+    """
     if original_ratio < 1:
         ratio = 1.0 / round(1.0/original_ratio)
     else:
@@ -177,7 +198,11 @@ def round_ratio(original_ratio):
     return ratio
 
 def ratio_check(c_value, a_value):
-    #check to see if ratio of a and c values for hexagonal and tetragonal symmetries is close to sqrt(2)
+    """
+    Checks to see if the ratio of lattice constants (a,c) is close to c = sqrt(2)*a.
+    If the ratio is not close, then there will be no matches for hexagonal (a-plane) or tetragonal (a-plane) with cubic (110).
+    Takes lattice constants (a,c) as input and outputs a percent of how close the ratio is.
+    """
     percent_off = ((c_value/(numpy.sqrt(2.0)*a_value)) - 1)
     return abs(percent_off) #returns a percentage of how far off the ratio is
 
