@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 ###############################################
 ##              Lattice Checker              ##
 ###############################################
@@ -42,7 +43,7 @@ def check_film_file(film_file, substrate_composition, substrate_symmetry, sub_a,
         elif film_file[i][1] == "T":
             tetragonal_film(film_file[i][0], film_file[i][1], substrate_composition, substrate_symmetry, sub_a, sub_c, film_file[i][2], film_file[i][3])
         elif film_file[i][1] == "H":
-            hexagonal_film(film_file[i][0], film_file[i][1], substrate_composition, substrate_symmetry, sub_a, sub_c, film_file[i][2], film_file[i][3]) 
+            hexagonal_film(film_file[i][0], film_file[i][1], substrate_composition, substrate_symmetry, sub_a, sub_c, film_file[i][2], film_file[i][3])
 
 def lattice_check(film_file, substrate_file):
     """Creates a file of all acceptable lattice symmetry matches for two input database files.
@@ -55,7 +56,7 @@ def lattice_check(film_file, substrate_file):
         values to a function which in turn calls other functions to perform the desired calculations and write
         the values to the results .txt file.
     """
-    matches_file.write("Film\tSymmetry\tSubstrate\tSymmetry\tMismatch\tRounded Ratio\tOriginal Ratio\tC Mismatch\tC Rounded Ratio\tC Original Ratio\n")
+    matches_file.write("#Film\tSymmetry\tSubstrate\tSymmetry\tMismatch\tRounded Ratio\tOriginal Ratio\tC Mismatch\tC Rounded Ratio\tC Original Ratio\n")
     for i, l in enumerate(substrate_file):
         check_film_file(film_file, substrate_file[i][0], substrate_file[i][1], substrate_file[i][2], substrate_file[i][3])
 
@@ -100,12 +101,12 @@ def cubic_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a, fil
         ratio_c = round_ratio(original_ratio_c)
         mismatch_a = ((sub_a - (ratio_a*film_a)) / sub_a)
         mismatch_45 = (((numpy.sqrt(2.0)*sub_a) - (ratio_45*film_a)) / (numpy.sqrt(2.0)*sub_a))
-        mismatch_c = ((sub_c - (ratio_c*numpy.sqrt(2.0)*film_a)) / sub_c) 
+        mismatch_c = ((sub_c - (ratio_c*numpy.sqrt(2.0)*film_a)) / sub_c)
         if abs(mismatch_a) < tolerance:
             matches_file.write("{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a))
         if abs(mismatch_45) < tolerance:
             matches_file.write("{}\t{} (45 deg)\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_45, ratio_45, original_ratio_45))
-        if ratio_check(sub_c, sub_a) < tolerance and abs(mismatch_c) < tolerance and abs(mismatch_a) < tolerance: 
+        if ratio_check(sub_c, sub_a) < tolerance and abs(mismatch_c) < tolerance and abs(mismatch_a) < tolerance:
             matches_file.write("{}\t{} (110)\t{}\t{} (a-plane)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c, ratio_c, original_ratio_c))
     elif sub_sym == "H":
         # called if the substrate has hexagonal symmetry
@@ -256,7 +257,7 @@ def hexagonal_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a,
         mismatch_a = ((sub_a - ratio_a*film_a) / sub_a)
         if abs(mismatch_a) < tolerance:
             matches_file.write("{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a))
-            
+
 def round_ratio(original_ratio):
     """Rounds a ratio to an integer value.
 
