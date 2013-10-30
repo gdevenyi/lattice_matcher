@@ -56,13 +56,13 @@ def film_substrate_comparison(film_file, substrate_composition, substrate_symmet
         if film_file[i][0] == substrate_composition and film_file[i][1] == substrate_symmetry:
             pass
         elif film_file[i][1] == "C":
-            cubic_film(film_file[i][0], film_file[i][1], substrate_composition, substrate_symmetry, sub_a, sub_c, film_file[i][2], film_file[i][3])
+            cubic_film(film_file[i][0], film_file[i][1], substrate_composition, substrate_symmetry, sub_a, sub_c, film_file[i][2])
         elif film_file[i][1] == "T":
             tetragonal_film(film_file[i][0], film_file[i][1], substrate_composition, substrate_symmetry, sub_a, sub_c, film_file[i][2], film_file[i][3])
         elif film_file[i][1] == "H":
             hexagonal_film(film_file[i][0], film_file[i][1], substrate_composition, substrate_symmetry, sub_a, sub_c, film_file[i][2], film_file[i][3])
 
-def cubic_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a, film_c):
+def cubic_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a):
     """Performs mismatch and ratio checks for a cubic film on various substrates.
 
     Args:
@@ -73,7 +73,6 @@ def cubic_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a, fil
         sub_a: substrate lattice constant 'a' value
         sub_c: substrate lattice constant 'c' value
         film_a: film lattice constant 'a' value
-        film_c: film lattice constant 'c' value
     Returns:
         Write a new line containing match information in a tab delimited .txt file. The calculated mismatch
         values must be less than the chosen tolerance level for data to be written to the results file. An
