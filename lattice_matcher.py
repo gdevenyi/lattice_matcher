@@ -16,30 +16,24 @@ parser.add_argument("substrate", type=str, help="File with substrate material da
 parser.add_argument("tolerance", type=float, help="Tolerance level for mismatch. Enter percent as a decimal")
 # Parse all arguments
 args = parser.parse_args()
-# Create a label for the matches file. [:-4] strips last 4 characters of file name string
-matches_file_label = args.film[:-4] + "_on_" + args.substrate[:-4] + ".txt" # Added ".txt" to specify type of file
-matches_file = open(matches_file_label, "w")
-# Read input .txt files using numpy.genfromtxt()
-film_database = numpy.genfromtxt(args.film, comments="#", delimiter="\t", dtype=None)
-substrate_database = numpy.genfromtxt(args.substrate, comments="#", delimiter="\t", dtype=None)
-tolerance = args.tolerance # Percent tolerance for lattice mismatch as a decimal
 
-def lattice_matcher(film_database, substrate_database):
+def lattice_matcher(film_file, substrate_file, matches_file):
     """Creates a file of all acceptable lattice symmetry matches for two input database files.
 
     Args:
         film_file: a tab delimited .txt file containing data for film materials
         substrate_file: a tab delimited .txt file containing data for substrate materials
+        matches_file: a tab delimited .txt file where all accepted matches are written to
     Returns:
         A tab delimited .txt file with all acceptable lattice matches. Lattice matches are calculated by passing
         values to a function which in turn calls other functions to perform the desired calculations and write
         the values to the results .txt file.
     """
     matches_file.write("#Film\tSymmetry\tSubstrate\tSymmetry\tMismatch\tRounded Ratio\tOriginal Ratio\tC Mismatch\tC Rounded Ratio\tC Original Ratio\n")
-    for i, l in enumerate(substrate_database):
-        film_substrate_comparison(film_database, substrate_database[i][0], substrate_database[i][1], substrate_database[i][2], substrate_database[i][3])
+    for i, line in enumerate(substrate_database):
+        film_substrate_comparison(film_database, substrate_database[i][0], substrate_database[i][1], substrate_database[i][2], substrate_database[i][3], matches_file)
 
-def film_substrate_comparison(film_file, substrate_composition, substrate_symmetry, sub_a, sub_c):
+def film_substrate_comparison(film_file, substrate_composition, substrate_symmetry, sub_a, sub_c, result_file):
     """Passes values to various functions to perform mismatch calculations.
 
     Args:
@@ -48,21 +42,22 @@ def film_substrate_comparison(film_file, substrate_composition, substrate_symmet
         substrate_symmetry: substrate material symmetry
         sub_a: substrate lattice constant 'a' value
         sub_c: substrate lattice constant 'c' value
+        results_file: a tab delimited .txt file where all accepted matches are written to
     Returns:
         A tab delimited .txt file with all acceptable lattice matches. Lattice matches are calculated by calling
         various functions which perform the desired calculations and write the results to the .txt file.
     """
-    for i, l in enumerate(film_file):
+    for i, line in enumerate(film_file):
         if film_file[i][0] == substrate_composition and film_file[i][1] == substrate_symmetry:
             pass
         elif film_file[i][1] == "C":
-            cubic_film(film_file[i][0], film_file[i][1], substrate_composition, substrate_symmetry, sub_a, sub_c, film_file[i][2])
+            cubic_film(film_file[i][0], film_file[i][1], substrate_composition, substrate_symmetry, sub_a, sub_c, film_file[i][2], result_file)
         elif film_file[i][1] == "T":
-            tetragonal_film(film_file[i][0], film_file[i][1], substrate_composition, substrate_symmetry, sub_a, sub_c, film_file[i][2], film_file[i][3])
+            tetragonal_film(film_file[i][0], film_file[i][1], substrate_composition, substrate_symmetry, sub_a, sub_c, film_file[i][2], film_file[i][3], result_file)
         elif film_file[i][1] == "H":
-            hexagonal_film(film_file[i][0], film_file[i][1], substrate_composition, substrate_symmetry, sub_a, sub_c, film_file[i][2], film_file[i][3])
+            hexagonal_film(film_file[i][0], film_file[i][1], substrate_composition, substrate_symmetry, sub_a, sub_c, film_file[i][2], film_file[i][3], result_file)
 
-def cubic_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a):
+def cubic_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a, output_file):
     """Performs mismatch and ratio checks for a cubic film on various substrates.
 
     Args:
@@ -73,6 +68,7 @@ def cubic_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a):
         sub_a: substrate lattice constant 'a' value
         sub_c: substrate lattice constant 'c' value
         film_a: film lattice constant 'a' value
+        output_file: a tab delimited .txt file where all accepted matches are written to
     Returns:
         Write a new line containing match information in a tab delimited .txt file. The calculated mismatch
         values must be less than the chosen tolerance level for data to be written to the results file. An
@@ -89,9 +85,9 @@ def cubic_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a):
         mismatch_a = ((sub_a - (ratio_a*film_a)) / sub_a)
         mismatch_45 = (((numpy.sqrt(2.0)*sub_a) - (ratio_45*film_a)) / (numpy.sqrt(2.0)*sub_a))
         if abs(mismatch_a) < tolerance:
-            matches_file.write("{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a))
+            output_file.write("{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a))
         if abs(mismatch_45) < tolerance:
-            matches_file.write("{}\t{} (45 deg)\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_45, ratio_45, original_ratio_45))
+            output_file.write("{}\t{} (45 deg)\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_45, ratio_45, original_ratio_45))
     elif sub_sym == "T":
         # called if the substrate has tetragonal symmetry
         original_ratio_a = sub_a/film_a #ratio of a-values
@@ -104,11 +100,11 @@ def cubic_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a):
         mismatch_45 = (((numpy.sqrt(2.0)*sub_a) - (ratio_45*film_a)) / (numpy.sqrt(2.0)*sub_a))
         mismatch_c = ((sub_c - (ratio_c*numpy.sqrt(2.0)*film_a)) / sub_c)
         if abs(mismatch_a) < tolerance:
-            matches_file.write("{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a))
+            output_file.write("{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a))
         if abs(mismatch_45) < tolerance:
-            matches_file.write("{}\t{} (45 deg)\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_45, ratio_45, original_ratio_45))
+            output_file.write("{}\t{} (45 deg)\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_45, ratio_45, original_ratio_45))
         if ratio_check(sub_c, sub_a) < tolerance and abs(mismatch_c) < tolerance and abs(mismatch_a) < tolerance:
-            matches_file.write("{}\t{} (110)\t{}\t{} (a-plane)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c, ratio_c, original_ratio_c))
+            output_file.write("{}\t{} (110)\t{}\t{} (a-plane)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c, ratio_c, original_ratio_c))
     elif sub_sym == "H":
         # called if the substrate has hexagonal symmetry
         original_ratio_a_111 = sub_a/(numpy.sqrt(2.0)*film_a) #ratio of a-values for cubic (111) matches
@@ -125,13 +121,13 @@ def cubic_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a):
         mismatch_c_r = ((numpy.sqrt((sub_c**2)+(3*(sub_a**2))) - (ratio_c_r*film_a*numpy.sqrt(2.0))) / numpy.sqrt((sub_c**2)+(3*(sub_a**2))))
         r_plane_c = numpy.sqrt((sub_c**2)+(3*(sub_a**2))) #side length for camparison of r-plane hex side lengths
         if abs(mismatch_a_111) < tolerance:
-            matches_file.write("{}\t{} (111)\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a_111, ratio_a_111, original_ratio_a_111))
+            output_file.write("{}\t{} (111)\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a_111, ratio_a_111, original_ratio_a_111))
         if ratio_check(sub_c, sub_a) < tolerance and abs(mismatch_c) and abs(mismatch_a) < tolerance:
-            matches_file.write("{}\t{} (110)\t{}\t{} (a-plane)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c, ratio_c, original_ratio_c))
+            output_file.write("{}\t{} (110)\t{}\t{} (a-plane)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c, ratio_c, original_ratio_c))
         if ratio_check(r_plane_c, sub_a) < tolerance and abs(mismatch_c_r) and abs(mismatch_a) < tolerance:
-            matches_file.write("{}\t{} (110)\t{}\t{} (r-plane)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c_r, ratio_c_r, original_ratio_c_r))
+            output_file.write("{}\t{} (110)\t{}\t{} (r-plane)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c_r, ratio_c_r, original_ratio_c_r))
 
-def tetragonal_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a, film_c):
+def tetragonal_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a, film_c, output_file):
     """Performs mismatch and ratio checks for a tetragonal film on various substrates.
 
     Args:
@@ -143,6 +139,7 @@ def tetragonal_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a
         sub_c: substrate lattice constant 'c' value
         film_a: film lattice constant 'a' value
         film_c: film lattice constant 'c' value
+        output_file: a tab delimited .txt file where all accepted matches are written to
     Returns:
         Write a new line containing match information in a tab delimited .txt file. The calculated mismatch
         values must be less than the chosen tolerance level for data to be written to the results file. An
@@ -162,11 +159,11 @@ def tetragonal_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a
         mismatch_45 = (((numpy.sqrt(2.0)*sub_a) - (ratio_45*film_a)) / (numpy.sqrt(2.0)*sub_a))
         mismatch_c = (((numpy.sqrt(2.0)*sub_a) - (ratio_c*film_a)) / (numpy.sqrt(2.0)*sub_a))
         if abs(mismatch_a) < tolerance:
-            matches_file.write("{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a))
+            output_file.write("{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a))
         if abs(mismatch_45) < tolerance:
-            matches_file.write("{}\t{} (45 deg)\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_45, ratio_45, original_ratio_45))
+            output_file.write("{}\t{} (45 deg)\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_45, ratio_45, original_ratio_45))
         if ratio_check(film_c, film_a) < tolerance and abs(mismatch_c) < tolerance and abs(mismatch_a) < tolerance:
-            matches_file.write("{}\t{} (a-plane)\t{}\t{} (110)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c, ratio_c, original_ratio_c))
+            output_file.write("{}\t{} (a-plane)\t{}\t{} (110)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c, ratio_c, original_ratio_c))
     elif sub_sym == "T":
         # called if the substrate has tetragonal symmetry
         original_ratio = sub_a/film_a
@@ -176,9 +173,9 @@ def tetragonal_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a
         mismatch = ((sub_a - (ratio*film_a)) / sub_a)
         mismatch_45 = (((numpy.sqrt(2.0)*sub_a) - (ratio_45*film_a)) / (numpy.sqrt(2.0)*sub_a))
         if abs(mismatch) < tolerance:
-            matches_file.write("{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch, ratio, original_ratio))
+            output_file.write("{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch, ratio, original_ratio))
         if abs(mismatch_45) < tolerance:
-            matches_file.write("{}\t{} (45 deg)\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_45, ratio_45, original_ratio_45))
+            output_file.write("{}\t{} (45 deg)\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_45, ratio_45, original_ratio_45))
     elif sub_sym == "H":
         # called if the substrate has hexagonal symmetry
         original_ratio_a = sub_a/film_a #tetragonal against hexagonal a-values
@@ -191,11 +188,11 @@ def tetragonal_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a
         mismatch_c = ((sub_c - ratio_c*film_c) / sub_c)
         mismatch_c_r = ((numpy.sqrt((sub_c**2)+(3*(sub_a**2))) - ratio_c_r*film_c) / numpy.sqrt((sub_c**2)+(3*(sub_a**2))))
         if abs(mismatch_a) < tolerance and abs(mismatch_c) < tolerance:
-            matches_file.write("{}\t{} (a-plane)\t{}\t{} (a-plane)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c, ratio_c, original_ratio_c))
+            output_file.write("{}\t{} (a-plane)\t{}\t{} (a-plane)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c, ratio_c, original_ratio_c))
         if abs(mismatch_a) < tolerance and abs(mismatch_c_r) < tolerance:
-            matches_file.write("{}\t{} (a-plane)\t{}\t{} (r-plane)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c_r, ratio_c_r, original_ratio_c_r))
+            output_file.write("{}\t{} (a-plane)\t{}\t{} (r-plane)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c_r, ratio_c_r, original_ratio_c_r))
 
-def hexagonal_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a, film_c):
+def hexagonal_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a, film_c, output_file):
     """Performs mismatch and ratio checks for a hexagonal film on various substrates.
 
     Args:
@@ -207,6 +204,7 @@ def hexagonal_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a,
         sub_c: substrate lattice constant 'c' value
         film_a: film lattice constant 'a' value
         film_c: film lattice constant 'c' value
+        output_file: a tab delimited .txt file where all accepted matches are written to
     Returns:
         Write a new line containing match information in a tab delimited .txt file. The calculated mismatch
         values must be less than the chosen tolerance level for data to be written to the results file. An
@@ -230,11 +228,11 @@ def hexagonal_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a,
         mismatch_c = ((numpy.sqrt(2.0)*sub_a - ratio_c*film_c) / numpy.sqrt(2.0)*sub_a)
         mismatch_c_r = ((numpy.sqrt(2.0)*sub_a - ratio_c_r*r_plane_c) / numpy.sqrt(2.0)*sub_a)
         if abs(mismatch_a_111) < tolerance:
-            matches_file.write("{}\t{}\t{}\t{} (111)\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a_111, ratio_a_111, original_ratio_a_111))
+            output_file.write("{}\t{}\t{}\t{} (111)\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a_111, ratio_a_111, original_ratio_a_111))
         if ratio_check(film_c, film_a) < tolerance and abs(mismatch_c) < tolerance and abs(mismatch_a) < tolerance:
-            matches_file.write("{}\t{} (a-plane)\t{}\t{} (110)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c, ratio_c, original_ratio_c))
+            output_file.write("{}\t{} (a-plane)\t{}\t{} (110)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c, ratio_c, original_ratio_c))
         if ratio_check(r_plane_c, film_a) < tolerance and abs(mismatch_c) < tolerance and abs(mismatch_c) < tolerance:
-            matches_file.write("{}\t{} (r-plane)\t{}\t{} (110)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c_r, ratio_c_r, original_ratio_c_r))
+            output_file.write("{}\t{} (r-plane)\t{}\t{} (110)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c_r, ratio_c_r, original_ratio_c_r))
     elif sub_sym == "T":
         # called if the substrate has tetragonal symmetry
         r_plane_c = numpy.sqrt((film_c**2)+(3*(film_a**2))) #side length for camparison of r-plane hex side lengths
@@ -248,16 +246,16 @@ def hexagonal_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a,
         mismatch_c = ((sub_c - ratio_c*film_c) / sub_c)
         mismatch_c_r = ((sub_c - ratio_c_r*r_plane_c) / sub_c)
         if abs(mismatch_a) < tolerance and abs(mismatch_c) < tolerance:
-            matches_file.write("{}\t{} (a-plane)\t{}\t{} (a-plane)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c, ratio_c, original_ratio_c))
+            output_file.write("{}\t{} (a-plane)\t{}\t{} (a-plane)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c, ratio_c, original_ratio_c))
         if abs(mismatch_a) < tolerance and abs(mismatch_c_r) < tolerance:
-            matches_file.write("{}\t{} (r-plane)\t{}\t{} (a-plane)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c_r, ratio_c_r, original_ratio_c_r))
+            output_file.write("{}\t{} (r-plane)\t{}\t{} (a-plane)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c_r, ratio_c_r, original_ratio_c_r))
     elif sub_sym == "H":
         # called if the substrate has hexagonal symmetry
         original_ratio_a = sub_a/film_a #ratio of a-values
         ratio_a = round_ratio(original_ratio_a)
         mismatch_a = ((sub_a - ratio_a*film_a) / sub_a)
         if abs(mismatch_a) < tolerance:
-            matches_file.write("{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a))
+            output_file.write("{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a))
 
 def round_ratio(original_ratio):
     """Rounds a ratio to an integer value.
@@ -286,7 +284,14 @@ def ratio_check(c_value, a_value):
     return abs(percent_off) #returns a percentage of how far off the ratio is
 
 if __name__ == "__main__":
+    # Create a label for the matches file. [:-4] strips last 4 characters of file name string
+    matches_database_label = args.film[:-4] + "_on_" + args.substrate[:-4] + ".txt" # Added ".txt" to specify type of file
+    matches_database = open(matches_database_label, "w")
+    # Read input .txt files using numpy.genfromtxt()
+    film_database = numpy.genfromtxt(args.film, comments="#", delimiter="\t", dtype=None)
+    substrate_database = numpy.genfromtxt(args.substrate, comments="#", delimiter="\t", dtype=None)
+    tolerance = args.tolerance # Percent tolerance for lattice mismatch as a decimal
     # Call lattice_check to perform the check
-    lattice_matcher(film_database, substrate_database)
+    lattice_matcher(film_database, substrate_database, matches_database)
     # Close any open files
-    matches_file.close()
+    matches_database.close()
