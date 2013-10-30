@@ -20,11 +20,11 @@ args = parser.parse_args()
 matches_file_label = args.film[:-4] + "_on_" + args.substrate[:-4] + ".txt" # Added ".txt" to specify type of file
 matches_file = open(matches_file_label, "w")
 # Read input .txt files using numpy.genfromtxt()
-film_file = numpy.genfromtxt(args.film, comments="#", delimiter="\t", dtype=None)
-substrate_file = numpy.genfromtxt(args.substrate, comments="#", delimiter="\t", dtype=None)
+film_database = numpy.genfromtxt(args.film, comments="#", delimiter="\t", dtype=None)
+substrate_database = numpy.genfromtxt(args.substrate, comments="#", delimiter="\t", dtype=None)
 tolerance = args.tolerance # Percent tolerance for lattice mismatch as a decimal
 
-def lattice_matcher(film_file, substrate_file):
+def lattice_matcher(film_database, substrate_database):
     """Creates a file of all acceptable lattice symmetry matches for two input database files.
 
     Args:
@@ -36,8 +36,8 @@ def lattice_matcher(film_file, substrate_file):
         the values to the results .txt file.
     """
     matches_file.write("#Film\tSymmetry\tSubstrate\tSymmetry\tMismatch\tRounded Ratio\tOriginal Ratio\tC Mismatch\tC Rounded Ratio\tC Original Ratio\n")
-    for i, l in enumerate(substrate_file):
-        film_substrate_comparison(film_file, substrate_file[i][0], substrate_file[i][1], substrate_file[i][2], substrate_file[i][3])
+    for i, l in enumerate(substrate_database):
+        film_substrate_comparison(film_database, substrate_database[i][0], substrate_database[i][1], substrate_database[i][2], substrate_database[i][3])
 
 def film_substrate_comparison(film_file, substrate_composition, substrate_symmetry, sub_a, sub_c):
     """Passes values to various functions to perform mismatch calculations.
@@ -288,6 +288,6 @@ def ratio_check(c_value, a_value):
 
 if __name__ == "__main__":
     # Call lattice_check to perform the check
-    lattice_matcher(film_file, substrate_file)
+    lattice_matcher(film_database, substrate_database)
     # Close any open files
     matches_file.close()
