@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-###############################################
-##              Lattice Matcher              ##
-###############################################
+###############################################################################
+##                              Lattice Matcher                              ##
+###############################################################################
 
 import numpy # includes numpy.sqrt()
 import argparse # command line implementation
@@ -18,16 +18,19 @@ parser.add_argument("tolerance", type=float, help="Tolerance level for mismatch.
 args = parser.parse_args()
 
 def lattice_matcher(film_file, substrate_file, matches_file):
-    """Creates a file of all acceptable lattice symmetry matches for two input database files.
+    """Creates a file of all acceptable lattice symmetry matches for two input 
+       database files.
 
     Args:
         film_file: a tab delimited .txt file containing data for film materials
-        substrate_file: a tab delimited .txt file containing data for substrate materials
-        matches_file: a tab delimited .txt file where all accepted matches are written to
+        substrate_file: a tab delimited .txt file containing data for substrate
+        materials matches_file: a tab delimited .txt file where all accepted 
+        matches are written to
     Returns:
-        A tab delimited .txt file with all acceptable lattice matches. Lattice matches are calculated by passing
-        values to a function which in turn calls other functions to perform the desired calculations and write
-        the values to the results .txt file.
+        A tab delimited .txt file with all acceptable lattice matches. Lattice 
+        matches are calculated by passing values to a function which in turn 
+        calls other functions to perform the desired calculations and write the
+        values to the results .txt file.
     """
     matches_file.write("#Film\tSymmetry\tSubstrate\tSymmetry\tMismatch\tRounded Ratio\tOriginal Ratio\tC Mismatch\tC Rounded Ratio\tC Original Ratio\n")
     for i, line in enumerate(substrate_file):
@@ -37,15 +40,18 @@ def film_substrate_comparison(input_film_file, substrate_composition, substrate_
     """Passes values to various functions to perform mismatch calculations.
 
     Args:
-        input_film_file: a tab delimited .txt file containing data for film materials
+        input_film_file: a tab delimited .txt file containing data for film 
+                         materials
         substrate_composition: substrate material composition
         substrate_symmetry: substrate material symmetry
         sub_a: substrate lattice constant 'a' value
         sub_c: substrate lattice constant 'c' value
-        results_file: a tab delimited .txt file where all accepted matches are written to
+        results_file: a tab delimited .txt file where all accepted matches are 
+                      written to
     Returns:
-        A tab delimited .txt file with all acceptable lattice matches. Lattice matches are calculated by calling
-        various functions which perform the desired calculations and write the results to the .txt file.
+        A tab delimited .txt file with all acceptable lattice matches. Lattice 
+        matches are calculated by calling various functions which perform the 
+        desired calculations and write the results to the .txt file.
     """
     for i, line in enumerate(input_film_file):
         if input_film_file[i][0] == substrate_composition and input_film_file[i][1] == substrate_symmetry:
@@ -68,13 +74,16 @@ def cubic_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a, out
         sub_a: substrate lattice constant 'a' value
         sub_c: substrate lattice constant 'c' value
         film_a: film lattice constant 'a' value
-        output_file: a tab delimited .txt file where all accepted matches are written to
+        output_file: a tab delimited .txt file where all accepted matches are 
+                     written to
     Returns:
-        Write a new line containing match information in a tab delimited .txt file. The calculated mismatch
-        values must be less than the chosen tolerance level for data to be written to the results file. An
-        example output line (with column labels) is:
-            Film    Symm    Sub     Symm    Mismatch    Rounded Ratio   Original Ratio   
-            CdSe    C       In      T       0.069       0.5             0.538
+        Write a new line containing match information in a tab delimited .txt 
+        file. The calculated mismatch values must be less than the chosen 
+        tolerance level for data to be written to the results file. An example 
+        output line (with column labels) is:
+            
+        Film    Symm    Sub     Symm    Mismatch    Rounded Ratio   Original Ratio   
+        CdSe    C       In      T       0.069       0.5             0.538
     """
     if sub_sym == "C":
         # called if the substrate has cubic symmetry
@@ -139,13 +148,16 @@ def tetragonal_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a
         sub_c: substrate lattice constant 'c' value
         film_a: film lattice constant 'a' value
         film_c: film lattice constant 'c' value
-        output_file: a tab delimited .txt file where all accepted matches are written to
+        output_file: a tab delimited .txt file where all accepted matches are 
+                     written to
     Returns:
-        Write a new line containing match information in a tab delimited .txt file. The calculated mismatch
-        values must be less than the chosen tolerance level for data to be written to the results file. An
-        example output line (with column labels) is:
-            Film    Symm    Sub     Symm    Mismatch    Rounded Ratio   Original Ratio   
-            In      T       Ni      C       0.077       1               1.084
+        Write a new line containing match information in a tab delimited .txt 
+        file. The calculated mismatch values must be less than the chosen 
+        tolerance level for data to be written to the results file. An example 
+        output line (with column labels) is:
+        
+        Film    Symm    Sub     Symm    Mismatch    Rounded Ratio   Original Ratio   
+        In      T       Ni      C       0.077       1               1.084
     """
     if sub_sym == "C":
         # called if the substrate has cubic symmetry
@@ -204,13 +216,16 @@ def hexagonal_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a,
         sub_c: substrate lattice constant 'c' value
         film_a: film lattice constant 'a' value
         film_c: film lattice constant 'c' value
-        output_file: a tab delimited .txt file where all accepted matches are written to
+        output_file: a tab delimited .txt file where all accepted matches are 
+                     written to
     Returns:
-        Write a new line containing match information in a tab delimited .txt file. The calculated mismatch
-        values must be less than the chosen tolerance level for data to be written to the results file. An
-        example output line (with column labels) is:
-            Film    Symm    Sub     Symm    Mismatch    Rounded Ratio   Original Ratio   
-            Co      H       C(111)  C       0.076       2               2.012
+        Write a new line containing match information in a tab delimited .txt 
+        file. The calculated mismatch values must be less than the chosen 
+        tolerance level for data to be written to the results file. An example 
+        output line (with column labels) is:
+        
+        Film    Symm    Sub     Symm    Mismatch    Rounded Ratio   Original Ratio   
+        Co      H       C(111)  C       0.076       2               2.012
     """
     if sub_sym == "C":
         # called if the substrate has cubic symmetry
@@ -278,7 +293,8 @@ def ratio_check(c_value, a_value):
         a_value: value of lattice constant 'a'
         c_value: value of lattice constant 'c'
     Returns:
-        abs(percent_off): the absolute value of the percent (as a decimal) of how far off the ratio is
+        abs(percent_off): the absolute value of the percent (as a decimal) of 
+                          how far off the ratio is
     """
     percent_off = ((c_value/(numpy.sqrt(2.0)*a_value)) - 1)
     return abs(percent_off) #returns a percentage of how far off the ratio is
