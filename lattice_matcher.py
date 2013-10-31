@@ -30,14 +30,14 @@ def lattice_matcher(film_file, substrate_file, matches_file):
         the values to the results .txt file.
     """
     matches_file.write("#Film\tSymmetry\tSubstrate\tSymmetry\tMismatch\tRounded Ratio\tOriginal Ratio\tC Mismatch\tC Rounded Ratio\tC Original Ratio\n")
-    for i, line in enumerate(substrate_database):
-        film_substrate_comparison(film_database, substrate_database[i][0], substrate_database[i][1], substrate_database[i][2], substrate_database[i][3], matches_file)
+    for i, line in enumerate(substrate_file):
+        film_substrate_comparison(film_file, substrate_file[i][0], substrate_file[i][1], substrate_file[i][2], substrate_file[i][3], matches_file)
 
-def film_substrate_comparison(film_file, substrate_composition, substrate_symmetry, sub_a, sub_c, result_file):
+def film_substrate_comparison(input_film_file, substrate_composition, substrate_symmetry, sub_a, sub_c, result_file):
     """Passes values to various functions to perform mismatch calculations.
 
     Args:
-        film_file: a tab delimited .txt file containing data for film materials
+        input_film_file: a tab delimited .txt file containing data for film materials
         substrate_composition: substrate material composition
         substrate_symmetry: substrate material symmetry
         sub_a: substrate lattice constant 'a' value
@@ -47,15 +47,15 @@ def film_substrate_comparison(film_file, substrate_composition, substrate_symmet
         A tab delimited .txt file with all acceptable lattice matches. Lattice matches are calculated by calling
         various functions which perform the desired calculations and write the results to the .txt file.
     """
-    for i, line in enumerate(film_file):
-        if film_file[i][0] == substrate_composition and film_file[i][1] == substrate_symmetry:
+    for i, line in enumerate(input_film_file):
+        if input_film_file[i][0] == substrate_composition and input_film_file[i][1] == substrate_symmetry:
             pass
-        elif film_file[i][1] == "C":
-            cubic_film(film_file[i][0], film_file[i][1], substrate_composition, substrate_symmetry, sub_a, sub_c, film_file[i][2], result_file)
-        elif film_file[i][1] == "T":
-            tetragonal_film(film_file[i][0], film_file[i][1], substrate_composition, substrate_symmetry, sub_a, sub_c, film_file[i][2], film_file[i][3], result_file)
-        elif film_file[i][1] == "H":
-            hexagonal_film(film_file[i][0], film_file[i][1], substrate_composition, substrate_symmetry, sub_a, sub_c, film_file[i][2], film_file[i][3], result_file)
+        elif input_film_file[i][1] == "C":
+            cubic_film(input_film_file[i][0], input_film_file[i][1], substrate_composition, substrate_symmetry, sub_a, sub_c, input_film_file[i][2], result_file)
+        elif input_film_file[i][1] == "T":
+            tetragonal_film(input_film_file[i][0], input_film_file[i][1], substrate_composition, substrate_symmetry, sub_a, sub_c, input_film_file[i][2], input_film_file[i][3], result_file)
+        elif input_film_file[i][1] == "H":
+            hexagonal_film(input_film_file[i][0], input_film_file[i][1], substrate_composition, substrate_symmetry, sub_a, sub_c, input_film_file[i][2], input_film_file[i][3], result_file)
 
 def cubic_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a, output_file):
     """Performs mismatch and ratio checks for a cubic film on various substrates.
