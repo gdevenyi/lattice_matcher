@@ -22,6 +22,7 @@ CdS	C	5.832	0
 CdSe	C	6.05	0
 CdTe	C	6.482	0
 Ce	c	5.16	0
+Ce:YAG	C	12.01	0
 CoO	C	4.2615	0
 (alpha)Cr	C	2.8848	0
 (alpha)Cs	C	6.141	0
