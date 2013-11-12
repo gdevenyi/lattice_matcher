@@ -43,30 +43,30 @@ def check_substrate_file(sub_file, output_file):
         if sub_file[i][1] == "H":
             hexagonal_sub(sub_file[i][0], sub_file[i][1], sub_file[i][2], sub_file[i][3], output_file)
 
-def cubic_sub(sub_comp, sub_sym, a_val, results_file):
+def cubic_sub(sub_comp, sub_sym, a_val, result_file):
     """Calculates max/min lattice constant values for a cubic substrate.
     
     Args:
         sub_comp: substrate composition
         sub_sym: substrate symmetry
         a_val: value of lattice constant 'a'
-        results_file: a tab delimited .txt file with the calculated maximum and
+        result_file: a tab delimited .txt file with the calculated maximum and
                       minimum lattice constant values for a specified tolerance
                       value.
         
     Returns:
-        Writes a new line to the results_file which contains the results of the
+        Writes a new line to the result_file which contains the results of the
         max/min calculations.    
     """
     a_max = upper_value(a_val)
     a_min = lower_value(a_val)
     c_max = upper_value((numpy.sqrt(2.0)*a_val))
     c_min = lower_value((numpy.sqrt(2.0)*a_val))
-    results_file.write("{}\t{}\t{}\t{}\n".format(sub_comp, sub_sym, a_max, a_min))
-    results_file.write("\t{} (110)\t{}\t{}\t{}\t{}\n".format(sub_sym, a_max, a_min, c_max, c_min))
-    results_file.write("\t{} (111)\t{}\t{}\n".format(sub_sym, c_max, c_min))
+    result_file.write("{}\t{}\t{}\t{}\n".format(sub_comp, sub_sym, a_max, a_min))
+    result_file.write("\t{} (110)\t{}\t{}\t{}\t{}\n".format(sub_sym, a_max, a_min, c_max, c_min))
+    result_file.write("\t{} (111)\t{}\t{}\n".format(sub_sym, c_max, c_min))
 
-def tetragonal_sub(sub_comp, sub_sym, a_val, c_val, results_file):
+def tetragonal_sub(sub_comp, sub_sym, a_val, c_val, result_file):
     """Calculates max/min lattice constant values for a tetragonal substrate.
     
     Args:
@@ -74,22 +74,22 @@ def tetragonal_sub(sub_comp, sub_sym, a_val, c_val, results_file):
         sub_sym: substrate symmetry
         a_val: value of lattice constant 'a'
         c_val: value of lattice constant 'c'
-        results_file: a tab delimited .txt file with the calculated maximum and
+        result_file: a tab delimited .txt file with the calculated maximum and
                       minimum lattice constant values for a specified tolerance
                       value.
         
     Returns:
-        Writes a new line to the results_file which contains the results of the
+        Writes a new line to the result_file which contains the results of the
         max/min calculations.    
     """
     a_max = upper_value(a_val)
     a_min = lower_value(a_val)
     c_max = upper_value(c_val)
     c_min = lower_value(c_val)
-    results_file.write("{}\t{}\t{}\t{}\n".format(sub_comp, sub_sym, a_max, a_min))
-    results_file.write("\t{} (a-plane)\t{}\t{}\t{}\t{}\n".format(sub_sym, a_max, a_min, c_max, c_min))
+    result_file.write("{}\t{}\t{}\t{}\n".format(sub_comp, sub_sym, a_max, a_min))
+    result_file.write("\t{} (a-plane)\t{}\t{}\t{}\t{}\n".format(sub_sym, a_max, a_min, c_max, c_min))
 
-def hexagonal_sub(sub_comp, sub_sym, a_val, c_val, results_file):
+def hexagonal_sub(sub_comp, sub_sym, a_val, c_val, result_file):
     """Calculates max/min lattice constant values for a hexagonal substrate.
     
     Args:
@@ -97,12 +97,12 @@ def hexagonal_sub(sub_comp, sub_sym, a_val, c_val, results_file):
         sub_sym: substrate symmetry
         a_val: value of lattice constant 'a'
         c_val: value of lattice constant 'c'
-        results_file: a tab delimited .txt file with the calculated maximum and
+        result_file: a tab delimited .txt file with the calculated maximum and
                       minimum lattice constant values for a specified tolerance
                       value.
         
     Returns:
-        Writes a new line to the results_file which contains the results of the
+        Writes a new line to the result_file which contains the results of the
         max/min calculations.    
     """
     a_max = upper_value(a_val)
@@ -111,9 +111,9 @@ def hexagonal_sub(sub_comp, sub_sym, a_val, c_val, results_file):
     c_min = lower_value(c_val)
     c_r_max = upper_value((numpy.sqrt(c_val**2 + (3.0*a_val**2))))
     c_r_min = lower_value((numpy.sqrt(c_val**2 + (3.0*a_val**2))))
-    results_file.write("{}\t{}\t{}\t{}\n".format(sub_comp, sub_sym, a_max, a_min))
-    results_file.write("\t{} (a-plane)\t{}\t{}\t{}\t{}\n".format(sub_sym, a_max, a_min, c_max, c_min))
-    results_file.write("\t{} (r-plane)\t{}\t{}\t{}\t{}\n".format(sub_sym, a_max, a_min, c_r_max, c_r_min))
+    result_file.write("{}\t{}\t{}\t{}\n".format(sub_comp, sub_sym, a_max, a_min))
+    result_file.write("\t{} (a-plane)\t{}\t{}\t{}\t{}\n".format(sub_sym, a_max, a_min, c_max, c_min))
+    result_file.write("\t{} (r-plane)\t{}\t{}\t{}\t{}\n".format(sub_sym, a_max, a_min, c_r_max, c_r_min))
 
 def upper_value(lattice_constant):
     """Calculate the maximum lattice constant based on the specified tolerance.
@@ -141,10 +141,10 @@ def lower_value(lattice_constant):
 
 if __name__ == "__main__":
     # create a label for the matches file.
-    minmax_file_label = "tolerance_values_for_" + args.substrate[:-4] + ".txt"
-    min_max_file = open(minmax_file_label, "w")
+    results_file_label = "tolerance_values_for_" + args.substrate[:-4] + ".txt"
+    results_file = open(results_file_label, "w")
     #read input .txt file with numpy.genfromtxt()
     substrate_file = numpy.genfromtxt(args.substrate, comments='#', delimiter="\t", dtype=None)
     tolerance = args.tolerance # percent tolerance for lattice mismatch as decimal
-    check_substrate_file(substrate_file, min_max_file)
-    min_max_file.close()
+    check_substrate_file(substrate_file, results_file)
+    results_file.close()
