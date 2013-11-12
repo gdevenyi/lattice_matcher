@@ -21,7 +21,9 @@ CaO	C	4.8127	0
 CdS	C	5.832	0
 CdSe	C	6.05	0
 CdTe	C	6.482	0
+Cd0.96Zn0.04Te	C	6.468	0
 Ce	c	5.16	0
+Ce:YAG	C	12.01	0
 CoO	C	4.2615	0
 (alpha)Cr	C	2.8848	0
 (alpha)Cs	C	6.141	0
@@ -32,9 +34,9 @@ Fe3O4	C	8.3967	0
 FeO	C	4.307	0
 FeS2	C	5.4166	0
 GaAs	C	5.6533	0
-GaN	C	4.5	0
-GaP	C	5.4512	0
-GaSb	C	6.0959	0
+GaN	C	4.52	0
+GaP	C	5.4505	0
+GaSb	C	6.095	0
 (alpha)Ge	C	5.6574	0
 GGG	C	12.376	0
 HgS	C	5.8517	0
@@ -48,7 +50,7 @@ Ir	C	3.8392	0
 K	C	5.321	0
 Kr	C	5.81	0
 KTaO3	C	3.989	0
-KTN	C	3.989	0
+KTN	C	3.990	0
 (beta)Li	C	3.5093	0
 LiF	C	4.026	0
 LSAT	C	3.868	0
@@ -58,7 +60,7 @@ MgO	C	4.216	0
 MnO	C	4.445	0
 Mo	C	3.147	0
 (beta)Na	C	4.2906	0
-NaCl	C	5.64	0
+NaCl	C	5.640	0
 Nb	C	3.3004	0
 Ne	C	4.43	0
 Ni	C	3.524	0
@@ -66,7 +68,7 @@ Ni2MnGa	C	5.82	0
 NiO	C	4.1769	0
 (alpha)P(white)	C	7.18	0
 (alpha)Pb	C	4.9502	0
-PbS	C	5.9362	0
+PbS	C	5.936	0
 PbSe	C	6.117	0
 PbTe	C	6.462	0
 Pd	C	3.8903	0
