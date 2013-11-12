@@ -20,7 +20,7 @@ a_AlSb = 6.1355
 a_GaSb = 6.095
 a_InSb = 6.4794
 
-results_list = []
+results_file = open("lattice_constant_list.txt", 'w')
 
 for y_P in numpy.arange(0, 1.1, 0.1):
     y = 1. - y_P
@@ -33,5 +33,7 @@ for y_P in numpy.arange(0, 1.1, 0.1):
                 a = y_P*(x_Al*a_AlP + x_Ga*a_GaP + x_In*a_InP) + \
                     y_As*(x_Al*a_AlAs + x_Ga*a_GaAs + x_In*a_InAs) + \
                     y_Sb*(x_Al*a_AlSb + x_Ga*a_GaSb + x_In*a_InSb)
-                entry = [y_P, y_As, y_Sb, x_Al, x_Ga, x_In, a]
-                results_list.append(entry)
+                results_file.write("{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(y_P, 
+                                   y_As, y_Sb, x_Al, x_Ga, x_In, a))
+                
+results_file.close()
