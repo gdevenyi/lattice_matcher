@@ -5,6 +5,10 @@
 """Calculates the lattice constant 'a' for the entire parameter space which
 satisfies the III-V semidonductor composition equation found on the III-V Calc
 information page. <http://ahrenkiel.sdsmt.edu/III_V_Calc/info/>
+
+Returns:
+    Creates a tab-delimited text file containing the composition information 
+    and the calculated lattice constant.
 """
 
 import numpy
