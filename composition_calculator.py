@@ -16,10 +16,11 @@ import argparse #for command line implementation
 
 parser = argparse.ArgumentParser(description="Software for calculating a range of material composition for an epitaxially grown film on a given substrate.")
 parser.add_argument("substrate", type=str, help="File with substrate material data.")
+parser.add_argument("reference", type=str, help="File with reference lattice constant and composition data.")
 parser.add_argument("tolerance", type=float, help="Tolerance level for mismatch. Enter percentage as decimal.")
 args = parser.parse_args()
 
-def check_substrate_file(sub_file, output_file):
+def check_substrate_file(sub_file, composition_reference_file, output_file):
     """Calls functions for calculations based on the information obtained from
        a supplied database file.
     
@@ -34,13 +35,13 @@ def check_substrate_file(sub_file, output_file):
     output_file.write("#Substrate\tSymmetry\ta-man\ta-min\tc-max\tc-min\n")
     for i, l in enumerate(sub_file):
         if sub_file[i][1] == "C":
-            cubic_sub(sub_file[i][0], sub_file[i][1], sub_file[i][2], output_file)
+            cubic_sub(sub_file[i][0], sub_file[i][1], sub_file[i][2], composition_reference_file, output_file)
         if sub_file[i][1] == "T":
-            tetragonal_sub(sub_file[i][0], sub_file[i][1], sub_file[i][2], sub_file[i][3], output_file)
+            tetragonal_sub(sub_file[i][0], sub_file[i][1], sub_file[i][2], sub_file[i][3], composition_reference_file, output_file)
         if sub_file[i][1] == "H":
-            hexagonal_sub(sub_file[i][0], sub_file[i][1], sub_file[i][2], sub_file[i][3], output_file)
+            hexagonal_sub(sub_file[i][0], sub_file[i][1], sub_file[i][2], sub_file[i][3], composition_reference_file, output_file)
 
-def cubic_sub(sub_comp, sub_sym, a_val, result_file):
+def cubic_sub(sub_comp, sub_sym, a_val, comp_ref_file, result_file):
     """Calculates max/min lattice constant values for a cubic substrate.
     
     Args:
@@ -63,7 +64,7 @@ def cubic_sub(sub_comp, sub_sym, a_val, result_file):
     result_file.write("\t{} (110)\t{}\t{}\t{}\t{}\n".format(sub_sym, a_max, a_min, c_max, c_min))
     result_file.write("\t{} (111)\t{}\t{}\n".format(sub_sym, c_max, c_min))
 
-def tetragonal_sub(sub_comp, sub_sym, a_val, c_val, result_file):
+def tetragonal_sub(sub_comp, sub_sym, a_val, c_val, comp_ref_file, result_file):
     """Calculates max/min lattice constant values for a tetragonal substrate.
     
     Args:
@@ -86,7 +87,7 @@ def tetragonal_sub(sub_comp, sub_sym, a_val, c_val, result_file):
     result_file.write("{}\t{}\t{}\t{}\n".format(sub_comp, sub_sym, a_max, a_min))
     result_file.write("\t{} (a-plane)\t{}\t{}\t{}\t{}\n".format(sub_sym, a_max, a_min, c_max, c_min))
 
-def hexagonal_sub(sub_comp, sub_sym, a_val, c_val, result_file):
+def hexagonal_sub(sub_comp, sub_sym, a_val, c_val, comp_ref_file, result_file):
     """Calculates max/min lattice constant values for a hexagonal substrate.
     
     Args:
@@ -141,6 +142,8 @@ if __name__ == "__main__":
     results_file_label = "composition_matches_for_" + args.substrate[:-4] + ".txt"
     results_file = open(results_file_label, "w")
     substrate_file = numpy.genfromtxt(args.substrate, comments='#', delimiter="\t", dtype=None)
+    lattice_constant_file = numpy.genfromtxt(args.reference, comments='#', delimiter="\t", dtype=None)
     tolerance = args.tolerance # percent tolerance for lattice mismatch as decimal
-    check_substrate_file(substrate_file, results_file)
+    check_substrate_file(substrate_file, results_file, lattice_constant_file)
+    lattice_constant_file.close()
     results_file.close()
