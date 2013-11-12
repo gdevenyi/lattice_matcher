@@ -21,6 +21,7 @@ a_GaSb = 6.095
 a_InSb = 6.4794
 
 results_file = open("lattice_constant_list.txt", 'w')
+results_file.write("#y_P\ty_As\ty_Sb\tx_Al\tx_Ga\tx_In\ta\n")
 
 for y_P in numpy.arange(0, 1.1, 0.1):
     y = 1. - y_P
