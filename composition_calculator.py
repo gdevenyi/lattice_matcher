@@ -14,12 +14,9 @@ given a threshold value.
 import numpy #includes numpy.sqrt()
 import argparse #for command line implementation
 
-# set up argument parser
-parser = argparse.ArgumentParser(description="Software for a range of material composition for an epitaxially grown film on a given substrate.")
-# add arguments
+parser = argparse.ArgumentParser(description="Software for calculating a range of material composition for an epitaxially grown film on a given substrate.")
 parser.add_argument("substrate", type=str, help="File with substrate material data.")
 parser.add_argument("tolerance", type=float, help="Tolerance level for mismatch. Enter percentage as decimal.")
-# parse all arguments
 args = parser.parse_args()
 
 def check_substrate_file(sub_file, output_file):
@@ -141,9 +138,8 @@ def lower_value(lattice_constant):
 
 if __name__ == "__main__":
     # create a label for the matches file.
-    results_file_label = "tolerance_values_for_" + args.substrate[:-4] + ".txt"
+    results_file_label = "composition_matches_for_" + args.substrate[:-4] + ".txt"
     results_file = open(results_file_label, "w")
-    #read input .txt file with numpy.genfromtxt()
     substrate_file = numpy.genfromtxt(args.substrate, comments='#', delimiter="\t", dtype=None)
     tolerance = args.tolerance # percent tolerance for lattice mismatch as decimal
     check_substrate_file(substrate_file, results_file)
