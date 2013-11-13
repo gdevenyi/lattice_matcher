@@ -32,14 +32,16 @@ def check_substrate_file(sub_file, composition_reference_file, output_file):
         A tab delimited .txt file with the maximum and minimum values related
         to the lattice constants of the substrate material. 
     """
-    output_file.write("#Substrate\tSymmetry\ta-man\ta-min\tc-max\tc-min\n")
+    output_file.write("#Film Composition\tFilm Symmetry\tFlim a\tSubstrate\tSymmetry\n")
     for i, l in enumerate(sub_file):
         if sub_file[i][1] == "C":
             cubic_sub(sub_file[i][0], sub_file[i][1], sub_file[i][2], composition_reference_file, output_file)
         if sub_file[i][1] == "T":
-            tetragonal_sub(sub_file[i][0], sub_file[i][1], sub_file[i][2], sub_file[i][3], composition_reference_file, output_file)
+            pass
+            #tetragonal_sub(sub_file[i][0], sub_file[i][1], sub_file[i][2], sub_file[i][3], composition_reference_file, output_file)
         if sub_file[i][1] == "H":
-            hexagonal_sub(sub_file[i][0], sub_file[i][1], sub_file[i][2], sub_file[i][3], composition_reference_file, output_file)
+            pass
+            #hexagonal_sub(sub_file[i][0], sub_file[i][1], sub_file[i][2], sub_file[i][3], composition_reference_file, output_file)
 
 def cubic_sub(sub_comp, sub_sym, a_val, comp_ref_file, result_file):
     """Calculates max/min lattice constant values for a cubic substrate.
@@ -58,12 +60,18 @@ def cubic_sub(sub_comp, sub_sym, a_val, comp_ref_file, result_file):
     """
     a_max = upper_value(a_val)
     a_min = lower_value(a_val)
-    c_max = upper_value((numpy.sqrt(2.0)*a_val))
-    c_min = lower_value((numpy.sqrt(2.0)*a_val))
-    result_file.write("{}\t{}\t{}\t{}\n".format(sub_comp, sub_sym, a_max, a_min))
-    result_file.write("\t{} (110)\t{}\t{}\t{}\t{}\n".format(sub_sym, a_max, a_min, c_max, c_min))
-    result_file.write("\t{} (111)\t{}\t{}\n".format(sub_sym, c_max, c_min))
-
+    a_45_max = upper_value((numpy.sqrt(2.0)*a_val))
+    a_45_min = lower_value((numpy.sqrt(2.0)*a_val))
+    for i, line in enumerate(comp_ref_file):
+        if comp_ref_file[i][6] > a_min and comp_ref_file[i][6] < a_max:
+            result_file.write("Al{}Ga{}In{}P{}As{}Sb{}\t{}\t{}\t{}\t{}\n".format(comp_ref_file[i][0], comp_ref_file[i][1],
+                               comp_ref_file[i][2], comp_ref_file[i][3], comp_ref_file[i][4], comp_ref_file[i][5], "C",
+                               comp_ref_file[i][6], sub_comp, sub_sym))  
+        if comp_ref_file[i][6] > a_45_min and comp_ref_file[i][6] < a_45_max:
+            result_file.write("Al{}Ga{}In{}P{}As{}Sb{}\t{}\t{}\t{}\t{}\n".format(comp_ref_file[i][0], comp_ref_file[i][1],
+                               comp_ref_file[i][2], comp_ref_file[i][3], comp_ref_file[i][4], comp_ref_file[i][5], "C (45 deg)",
+                               comp_ref_file[i][6], sub_comp, sub_sym))  
+                               
 def tetragonal_sub(sub_comp, sub_sym, a_val, c_val, comp_ref_file, result_file):
     """Calculates max/min lattice constant values for a tetragonal substrate.
     
@@ -82,10 +90,17 @@ def tetragonal_sub(sub_comp, sub_sym, a_val, c_val, comp_ref_file, result_file):
     """
     a_max = upper_value(a_val)
     a_min = lower_value(a_val)
-    c_max = upper_value(c_val)
-    c_min = lower_value(c_val)
-    result_file.write("{}\t{}\t{}\t{}\n".format(sub_comp, sub_sym, a_max, a_min))
-    result_file.write("\t{} (a-plane)\t{}\t{}\t{}\t{}\n".format(sub_sym, a_max, a_min, c_max, c_min))
+    a_45_max = upper_value((numpy.sqrt(2.0)*a_val))
+    a_45_min = lower_value((numpy.sqrt(2.0)*a_val))
+    for i, line in enumerate(comp_ref_file):
+        if comp_ref_file[i][6] > a_min and comp_ref_file[i][6] < a_max:
+            result_file.write("Al{}Ga{}In{}P{}As{}Sb{}\t{}\t{}\t{}\t{}\n".format(comp_ref_file[i][0], comp_ref_file[i][1],
+                               comp_ref_file[i][2], comp_ref_file[i][3], comp_ref_file[i][4], comp_ref_file[i][5], "C",
+                               comp_ref_file[i][6], sub_comp, sub_sym))  
+        if comp_ref_file[i][6] > a_45_min and comp_ref_file[i][6] < a_45_max:
+            result_file.write("Al{}Ga{}In{}P{}As{}Sb{}\t{}\t{}\t{}\t{} (45 deg)\n".format(comp_ref_file[i][0], comp_ref_file[i][1],
+                               comp_ref_file[i][2], comp_ref_file[i][3], comp_ref_file[i][4], comp_ref_file[i][5], "C (45 deg)",
+                               comp_ref_file[i][6], sub_comp, sub_sym))  
 
 def hexagonal_sub(sub_comp, sub_sym, a_val, c_val, comp_ref_file, result_file):
     """Calculates max/min lattice constant values for a hexagonal substrate.
@@ -105,14 +120,12 @@ def hexagonal_sub(sub_comp, sub_sym, a_val, c_val, comp_ref_file, result_file):
     """
     a_max = upper_value(a_val)
     a_min = lower_value(a_val)
-    c_max = upper_value(c_val)
-    c_min = lower_value(c_val)
-    c_r_max = upper_value((numpy.sqrt(c_val**2 + (3.0*a_val**2))))
-    c_r_min = lower_value((numpy.sqrt(c_val**2 + (3.0*a_val**2))))
-    result_file.write("{}\t{}\t{}\t{}\n".format(sub_comp, sub_sym, a_max, a_min))
-    result_file.write("\t{} (a-plane)\t{}\t{}\t{}\t{}\n".format(sub_sym, a_max, a_min, c_max, c_min))
-    result_file.write("\t{} (r-plane)\t{}\t{}\t{}\t{}\n".format(sub_sym, a_max, a_min, c_r_max, c_r_min))
-
+    for i, line in enumerate(comp_ref_file):
+        if comp_ref_file[i][6] > (numpy.sqrt(2.0)*a_min) and comp_ref_file[i][6] < (numpy.sqrt(2.0)*a_max):
+            result_file.write("Al{}Ga{}In{}P{}As{}Sb{}\t{}\t{}\t{}\t{}\n".format(comp_ref_file[i][0], comp_ref_file[i][1],
+                               comp_ref_file[i][2], comp_ref_file[i][3], comp_ref_file[i][4], comp_ref_file[i][5], "C (111)",
+                               comp_ref_file[i][6], sub_comp, sub_sym))  
+                               
 def upper_value(lattice_constant):
     """Calculate the maximum lattice constant based on the specified tolerance.
     
@@ -144,6 +157,5 @@ if __name__ == "__main__":
     substrate_file = numpy.genfromtxt(args.substrate, comments='#', delimiter="\t", dtype=None)
     lattice_constant_file = numpy.genfromtxt(args.reference, comments='#', delimiter="\t", dtype=None)
     tolerance = args.tolerance # percent tolerance for lattice mismatch as decimal
-    check_substrate_file(substrate_file, results_file, lattice_constant_file)
-    lattice_constant_file.close()
+    check_substrate_file(substrate_file, lattice_constant_file, results_file)
     results_file.close()
