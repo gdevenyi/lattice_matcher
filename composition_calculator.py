@@ -37,11 +37,9 @@ def check_substrate_file(sub_file, composition_reference_file, output_file):
         if sub_file[i][1] == "C":
             cubic_sub(sub_file[i][0], sub_file[i][1], sub_file[i][2], composition_reference_file, output_file)
         if sub_file[i][1] == "T":
-            pass
-            #tetragonal_sub(sub_file[i][0], sub_file[i][1], sub_file[i][2], sub_file[i][3], composition_reference_file, output_file)
+            tetragonal_sub(sub_file[i][0], sub_file[i][1], sub_file[i][2], sub_file[i][3], composition_reference_file, output_file)
         if sub_file[i][1] == "H":
-            pass
-            #hexagonal_sub(sub_file[i][0], sub_file[i][1], sub_file[i][2], sub_file[i][3], composition_reference_file, output_file)
+            hexagonal_sub(sub_file[i][0], sub_file[i][1], sub_file[i][2], sub_file[i][3], composition_reference_file, output_file)
 
 def cubic_sub(sub_comp, sub_sym, a_val, comp_ref_file, result_file):
     """Calculates max/min lattice constant values for a cubic substrate.
@@ -64,9 +62,9 @@ def cubic_sub(sub_comp, sub_sym, a_val, comp_ref_file, result_file):
     a_45_min = lower_value((numpy.sqrt(2.0)*a_val))
     for i, line in enumerate(comp_ref_file):
         if comp_ref_file[i][6] > a_min and comp_ref_file[i][6] < a_max:
-            result_file.write("Al{}Ga{}In{}P{}As{}Sb{}\t{}\t{}\t{}\t{}\n".format(comp_ref_file[i][0], comp_ref_file[i][1],
-                               comp_ref_file[i][2], comp_ref_file[i][3], comp_ref_file[i][4], comp_ref_file[i][5], "C",
-                               comp_ref_file[i][6], sub_comp, sub_sym))  
+            result_file.write("Al%.1fGa%.1fIn%.1fP%.1fAs%.1fSb%.1f\tC\t%.6f\t%s\t%s\n" \
+                              %(comp_ref_file[i][0], comp_ref_file[i][1], comp_ref_file[i][2], comp_ref_file[i][3], 
+                                comp_ref_file[i][4], comp_ref_file[i][5], comp_ref_file[i][6], sub_comp, sub_sym))
         if comp_ref_file[i][6] > a_45_min and comp_ref_file[i][6] < a_45_max:
             result_file.write("Al{}Ga{}In{}P{}As{}Sb{}\t{}\t{}\t{}\t{}\n".format(comp_ref_file[i][0], comp_ref_file[i][1],
                                comp_ref_file[i][2], comp_ref_file[i][3], comp_ref_file[i][4], comp_ref_file[i][5], "C (45 deg)",
