@@ -7,8 +7,9 @@
 Software to calculate a range of materials which may be epitaxially grown on a 
 given substrate. 
 
-CURRENT PROGESS: Calculates the max/min lattice constants for each substrate
-given a threshold value.
+CURRENT PROGESS: Reads in both a substrate database and a reference III-V 
+semiconductor lattice constant database, compares lattice constants and writes 
+matches to a tab delimited txt file.
 """
 
 import numpy #includes numpy.sqrt()
@@ -62,13 +63,13 @@ def cubic_sub(sub_comp, sub_sym, a_val, comp_ref_file, result_file):
     a_45_min = lower_value((numpy.sqrt(2.0)*a_val))
     for i, line in enumerate(comp_ref_file):
         if comp_ref_file[i][6] > a_min and comp_ref_file[i][6] < a_max:
-            result_file.write("Al%.1fGa%.1fIn%.1fP%.1fAs%.1fSb%.1f\tC\t%.6f\t%s\t%s\n" \
-                              %(comp_ref_file[i][0], comp_ref_file[i][1], comp_ref_file[i][2], comp_ref_file[i][3], 
-                                comp_ref_file[i][4], comp_ref_file[i][5], comp_ref_file[i][6], sub_comp, sub_sym))
+            film_comp = cust_print(comp_ref_file[i][0], comp_ref_file[i][1], comp_ref_file[i][2], 
+                                   comp_ref_file[i][3], comp_ref_file[i][4], comp_ref_file[i][5])
+            result_file.write("{}\t{}\t{}\t{}\t{}\n".format(film_comp, "C", comp_ref_file[i][6], sub_comp, sub_sym))
         if comp_ref_file[i][6] > a_45_min and comp_ref_file[i][6] < a_45_max:
-            result_file.write("Al{}Ga{}In{}P{}As{}Sb{}\t{}\t{}\t{}\t{}\n".format(comp_ref_file[i][0], comp_ref_file[i][1],
-                               comp_ref_file[i][2], comp_ref_file[i][3], comp_ref_file[i][4], comp_ref_file[i][5], "C (45 deg)",
-                               comp_ref_file[i][6], sub_comp, sub_sym))  
+            film_comp = cust_print(comp_ref_file[i][0], comp_ref_file[i][1], comp_ref_file[i][2], 
+                                   comp_ref_file[i][3], comp_ref_file[i][4], comp_ref_file[i][5])
+            result_file.write("{}\t{}\t{}\t{}\t{}\n".format(film_comp, "C (45 deg)", comp_ref_file[i][6], sub_comp, sub_sym))
                                
 def tetragonal_sub(sub_comp, sub_sym, a_val, c_val, comp_ref_file, result_file):
     """Calculates max/min lattice constant values for a tetragonal substrate.
@@ -92,13 +93,13 @@ def tetragonal_sub(sub_comp, sub_sym, a_val, c_val, comp_ref_file, result_file):
     a_45_min = lower_value((numpy.sqrt(2.0)*a_val))
     for i, line in enumerate(comp_ref_file):
         if comp_ref_file[i][6] > a_min and comp_ref_file[i][6] < a_max:
-            result_file.write("Al{}Ga{}In{}P{}As{}Sb{}\t{}\t{}\t{}\t{}\n".format(comp_ref_file[i][0], comp_ref_file[i][1],
-                               comp_ref_file[i][2], comp_ref_file[i][3], comp_ref_file[i][4], comp_ref_file[i][5], "C",
-                               comp_ref_file[i][6], sub_comp, sub_sym))  
+            film_comp = cust_print(comp_ref_file[i][0], comp_ref_file[i][1], comp_ref_file[i][2], 
+                                   comp_ref_file[i][3], comp_ref_file[i][4], comp_ref_file[i][5])
+            result_file.write("{}\t{}\t{}\t{}\t{}\n".format(film_comp, "C", comp_ref_file[i][6], sub_comp, sub_sym))
         if comp_ref_file[i][6] > a_45_min and comp_ref_file[i][6] < a_45_max:
-            result_file.write("Al{}Ga{}In{}P{}As{}Sb{}\t{}\t{}\t{}\t{} (45 deg)\n".format(comp_ref_file[i][0], comp_ref_file[i][1],
-                               comp_ref_file[i][2], comp_ref_file[i][3], comp_ref_file[i][4], comp_ref_file[i][5], "C (45 deg)",
-                               comp_ref_file[i][6], sub_comp, sub_sym))  
+            film_comp = cust_print(comp_ref_file[i][0], comp_ref_file[i][1], comp_ref_file[i][2], 
+                                   comp_ref_file[i][3], comp_ref_file[i][4], comp_ref_file[i][5])
+            result_file.write("{}\t{}\t{}\t{}\t{}\n".format(film_comp, "C (45 deg)", comp_ref_file[i][6], sub_comp, sub_sym))
 
 def hexagonal_sub(sub_comp, sub_sym, a_val, c_val, comp_ref_file, result_file):
     """Calculates max/min lattice constant values for a hexagonal substrate.
@@ -120,9 +121,9 @@ def hexagonal_sub(sub_comp, sub_sym, a_val, c_val, comp_ref_file, result_file):
     a_min = lower_value(a_val)
     for i, line in enumerate(comp_ref_file):
         if comp_ref_file[i][6] > (numpy.sqrt(2.0)*a_min) and comp_ref_file[i][6] < (numpy.sqrt(2.0)*a_max):
-            result_file.write("Al{}Ga{}In{}P{}As{}Sb{}\t{}\t{}\t{}\t{}\n".format(comp_ref_file[i][0], comp_ref_file[i][1],
-                               comp_ref_file[i][2], comp_ref_file[i][3], comp_ref_file[i][4], comp_ref_file[i][5], "C (111)",
-                               comp_ref_file[i][6], sub_comp, sub_sym))  
+            film_comp = cust_print(comp_ref_file[i][0], comp_ref_file[i][1], comp_ref_file[i][2], 
+                                   comp_ref_file[i][3], comp_ref_file[i][4], comp_ref_file[i][5])
+            result_file.write("{}\t{}\t{}\t{}\t{}\n".format(film_comp, "C (111)", comp_ref_file[i][6], sub_comp, sub_sym))
                                
 def upper_value(lattice_constant):
     """Calculate the maximum lattice constant based on the specified tolerance.
@@ -147,7 +148,39 @@ def lower_value(lattice_constant):
     """
     lower = (1.0 - tolerance) * lattice_constant
     return lower
-
+    
+def cust_print(x_Al, x_Ga, x_In, y_P, y_As, y_Sb):
+    """Custom print function to simplify output of composition. Input arguments
+    agree with the following rules:
+            x_Al + x_Ga + x_In = 1
+            y_P + y_As + y_Sb = 1
+            
+    Args:
+        x_Al: amount of Al in material 
+        x_Ga: amount of Ga in material
+        x_In: amount of In in material
+        y_P:  amount of P in material
+        y_As: amount of As in material
+        y_Sb: amount of Sb in material
+        
+    Returns:
+        composition: a string representing the composition formula 
+    """
+    composition = ""
+    if x_Al != 0.0:
+        composition += "Al"+str(x_Al)
+    if x_Ga != 0.0:
+        composition += "Ga"+str(x_Ga)
+    if x_In != 0.0:
+        composition += "In"+str(x_In)
+    if x_In != 0.0:
+        composition += "P"+str(y_P)
+    if y_As != 0.0:
+        composition += "As"+str(y_As)
+    if y_Sb != 0.0:
+        composition += "Sb"+str(y_Sb)
+    return composition
+    
 if __name__ == "__main__":
     # create a label for the matches file.
     results_file_label = "composition_matches_for_" + args.substrate[:-4] + ".txt"
