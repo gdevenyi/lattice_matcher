@@ -7,8 +7,8 @@ satisfies the III-V semidonductor composition equation found on the III-V Calc
 information page. <http://ahrenkiel.sdsmt.edu/III_V_Calc/info/>
 
 Returns:
-    Creates a tab-delimited text file containing the composition information 
-    and the calculated lattice constant.
+    Creates a compressed .npz file containing the composition information and 
+    the calculated lattice constants.
 """
 
 import numpy
@@ -24,20 +24,19 @@ a_AlSb = 6.1355
 a_GaSb = 6.095
 a_InSb = 6.4794
 
-results_file = open("lattice_constant_list.txt", 'w')
-results_file.write("#x_Al\tx_Ga\tx_In\ty_P\ty_As\ty_Sb\ta\n")
-
-for y_P in numpy.arange(0, 1.1, 0.1):
-    y = 1. - y_P
-    for y_As in numpy.arange(0, y+0.1, 0.1):
-        y_Sb = 1. - y_P - y_As
-        for x_Al in numpy.arange(0, 1.1, 0.1):
-            x = 1. - x_Al
-            for x_Ga in numpy.arange(0, x+0.1, 0.1):
-                x_In = 1. - x_Al - x_Ga
-                a = y_P*(x_Al*a_AlP + x_Ga*a_GaP + x_In*a_InP) + \
-                    y_As*(x_Al*a_AlAs + x_Ga*a_GaAs + x_In*a_InAs) + \
-                    y_Sb*(x_Al*a_AlSb + x_Ga*a_GaSb + x_In*a_InSb)
-                results_file.write("{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(x_Al, x_Ga, x_In, y_P, y_As, y_Sb, a))
-                
-results_file.close()
+lst = []
+for y_P in numpy.arange(0., 1.1, 0.1):
+    for y_As in numpy.arange(0., 1.1 - numpy.around(y_P, 1), 0.1):
+        for x_Al in numpy.arange(0., 1.1, 0.1):
+            for x_Ga in numpy.arange(0., 1.1 - numpy.around(x_Al, 1), 0.1):
+                y_Sb = numpy.around(1. - y_P - y_As, 1)
+                x_In = numpy.around(1. - x_Al - x_Ga, 1)
+                if (x_Al < 0.) or (x_Ga < 0.) or (x_In < 0.) or (y_P < 0.) or (y_As < 0.) or (y_Sb < 0.):
+                    pass
+                else:
+                    a = numpy.around((y_P*(x_Al*a_AlP + x_Ga*a_GaP + x_In*a_InP) + \
+                        y_As*(x_Al*a_AlAs + x_Ga*a_GaAs + x_In*a_InAs) + \
+                        y_Sb*(x_Al*a_AlSb + x_Ga*a_GaSb + x_In*a_InSb)), 6)
+                    entry = [x_Al, x_Ga, x_In, y_P, y_As, y_Sb, a]
+                lst.append(entry)
+numpy.savez_compressed("lattice_constants", lst)
