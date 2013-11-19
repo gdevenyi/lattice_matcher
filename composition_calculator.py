@@ -18,7 +18,7 @@ import argparse #for command line implementation
 parser = argparse.ArgumentParser(description="Software for calculating a range of material composition for an epitaxially grown film on a given substrate.")
 parser.add_argument("substrate", type=str, help="File with substrate material data.")
 parser.add_argument("reference", type=str, help="File with reference lattice constant and composition data.")
-parser.add_argument("tolerance", type=float, help="Tolerance level for mismatch. Enter percentage as decimal.")
+#parser.add_argument("tolerance", type=float, help="Tolerance level for mismatch. Enter percentage as decimal.")
 args = parser.parse_args()
 
 def check_substrate_file(sub_file, composition_reference_file, output_file):
@@ -181,12 +181,36 @@ def cust_print(x_Al, x_Ga, x_In, y_P, y_As, y_Sb):
         composition += "Sb"+str(y_Sb)
     return composition
     
+
+def create_tolerance_array(input_array, sub_lattice_const):
+    """Creates an array of materials with lattice constants which match the 
+    specified tolerance percentage.
+    
+    Args:
+        input_array: a numpy array with the lattice constant stored in the 
+                     right-most position of a line in the array
+        sub_lattice_const: reference substrate lattice constant
+    
+    Returns:
+        out_array: an array with materials with lattice constants within the 
+                   tolerance level
+    """
+    temp = input_array[input_array[:, -1] >= lower_value(sub_lattice_const)]
+    out_array = temp[temp[:, -1] <= upper_value(sub_lattice_const)]
+    
+
 if __name__ == "__main__":
     # create a label for the matches file.
     results_file_label = "composition_matches_for_" + args.substrate[:-4] + ".txt"
     results_file = open(results_file_label, "w")
     substrate_file = numpy.genfromtxt(args.substrate, comments='#', delimiter="\t", dtype=None)
     lattice_constant_file = numpy.genfromtxt(args.reference, comments='#', delimiter="\t", dtype=None)
-    tolerance = args.tolerance # percent tolerance for lattice mismatch as decimal
+    tolerance = 0.005
+    #tolerance = args.tolerance # percent tolerance for lattice mismatch as decimal
+    #load .npz lattice constant file
+    initial_array = numpy.load("lattice_constants.npz")
+    lattice_constants = initial_array['arr_0']
+    initial_array.close()
+    #call checker
     check_substrate_file(substrate_file, lattice_constant_file, results_file)
     results_file.close()
