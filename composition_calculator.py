@@ -135,29 +135,6 @@ def hexagonal_sub(sub_comp, sub_sym, sub_a_val, sub_c_val, lattice_const_array ,
                                accepted_lattice_const[i][3], accepted_lattice_const[i][4], accepted_lattice_const[i][5])
         result_file.write("{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, "C", accepted_lattice_const[i][6], sub_comp, sub_sym, sub_a_val))
 '''                               
-def upper_value(lattice_constant):
-    """Calculate the maximum lattice constant based on the specified tolerance.
-    
-    Args:
-        lattice_constant: lattice constant of a material
-        
-    Returns:
-        upper: the maximum accepted lattice constant based on tolerance level
-    """
-    upper = (1.0 + tolerance) * lattice_constant
-    return upper
-
-def lower_value(lattice_constant):
-    """Calculate the minimum lattice constant based on the specified tolerance.
-    
-    Args:
-        lattice_constant: lattice constant of a material
-        
-    Returns:
-        lower: the minimum accepted lattice constant based on tolerance level
-    """
-    lower = (1.0 - tolerance) * lattice_constant
-    return lower
     
 def cust_print(x_Al, x_Ga, x_In, y_P, y_As, y_Sb):
     """Custom print function to simplify output of composition. Input arguments
@@ -190,28 +167,6 @@ def cust_print(x_Al, x_Ga, x_In, y_P, y_As, y_Sb):
     if y_Sb != 0.0:
         composition += "Sb"+'{0:.{1}f}'.format(y_Sb, 2)
     return composition
-    
-def create_tolerance_array(input_array, sub_lattice_const):
-    """Creates an array of materials with lattice constants which match the 
-    specified tolerance percentage.
-    
-    Args:
-        input_array: a numpy array with the lattice constant stored in the 
-                     right-most position of a line in the array
-        sub_lattice_const: reference substrate lattice constant
-    
-    Returns:
-        out_array: an array with materials with lattice constants within the 
-                   tolerance level
-    """
-    if len(input_array) == 0:
-        pass
-    temp = input_array[input_array[:, -1] >= lower_value(sub_lattice_const)]
-    if len(temp) == 0:
-        return temp
-    else:
-        out_array = temp[temp[:, -1] <= upper_value(sub_lattice_const)]
-        return out_array
     
 
 if __name__ == "__main__":
