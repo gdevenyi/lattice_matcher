@@ -37,12 +37,14 @@ def check_substrate_file(sub_file, lattice_const_file, output_file):
     for i, l in enumerate(sub_file):
         if sub_file[i][1] == "C":
             cubic_sub(sub_file[i][0], sub_file[i][1], sub_file[i][2], lattice_const_file, output_file)
+        '''
         if sub_file[i][1] == "T":
             tetragonal_sub(sub_file[i][0], sub_file[i][1], sub_file[i][2], sub_file[i][3], lattice_const_file, output_file)
         if sub_file[i][1] == "H":
             hexagonal_sub(sub_file[i][0], sub_file[i][1], sub_file[i][2], sub_file[i][3], lattice_const_file, output_file)
+        '''
 
-def cubic_sub(sub_comp, sub_sym, sub_a_val, lattice_const_array , result_file):
+def cubic_sub(sub_comp, sub_sym, sub_a_val, lattice_consts , result_file):
     """Calculates max/min lattice constant values for a cubic substrate.
     
     Args:
@@ -60,21 +62,20 @@ def cubic_sub(sub_comp, sub_sym, sub_a_val, lattice_const_array , result_file):
         Writes a new line to the result_file which contains the results of the
         lattice constant comparision.    
     """    
-    accepted_lattice_const = create_tolerance_array(lattice_const_array, sub_a_val)
-    if len(accepted_lattice_const) == 0:
-        pass
-    for i, line in enumerate(accepted_lattice_const):
-        film_comp = cust_print(accepted_lattice_const[i][0], accepted_lattice_const[i][1], accepted_lattice_const[i][2], 
-                               accepted_lattice_const[i][3], accepted_lattice_const[i][4], accepted_lattice_const[i][5])
-        result_file.write("{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, "C", accepted_lattice_const[i][6], sub_comp, sub_sym, sub_a_val))
-    accepted_lattice_const45 = create_tolerance_array(lattice_const_array, (numpy.sqrt(2.0)*sub_a_val))
-    if len(accepted_lattice_const45) == 0:
-        pass
-    for i, line in enumerate(accepted_lattice_const45):
-        film_comp = cust_print(accepted_lattice_const45[i][0], accepted_lattice_const45[i][1], accepted_lattice_const45[i][2], 
-                               accepted_lattice_const45[i][3], accepted_lattice_const45[i][4], accepted_lattice_const45[i][5])
-        result_file.write("{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, "C (45deg)", accepted_lattice_const45[i][6], sub_comp, sub_sym, sub_a_val))
-                            
+    good_vals = (lattice_consts[:,-1] > (1.-tolerance)*sub_a_val) & (lattice_consts[:,-1] < (1. + tolerance)*sub_a_val)
+    for i, line in enumerate(good_vals):
+        if line:
+            film_comp = cust_print(lattice_consts[i][0], lattice_consts[i][1], lattice_consts[i][2], 
+                                   lattice_consts[i][3], lattice_consts[i][4], lattice_consts[i][5])
+            result_file.write("{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, "C", lattice_consts[i][6], sub_comp, sub_sym, sub_a_val))
+    good_vals45 = (lattice_consts[:,-1] > (1.-tolerance)*sub_a_val*numpy.sqrt(2.0)) & (lattice_consts[:,-1] < (1. + tolerance)*sub_a_val*numpy.sqrt(2.0))
+    for i, line in enumerate(good_vals45):
+        if line:
+            film_comp = cust_print(lattice_consts[i][0], lattice_consts[i][1], lattice_consts[i][2], 
+                                   lattice_consts[i][3], lattice_consts[i][4], lattice_consts[i][5])
+            result_file.write("{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, "C (45deg)", lattice_consts[i][6], sub_comp, sub_sym, sub_a_val))
+
+'''                            
 def tetragonal_sub(sub_comp, sub_sym, sub_a_val, sub_c_val, lattice_const_array , result_file):
     """Calculates max/min lattice constant values for a tetragonal substrate.
     
@@ -133,7 +134,7 @@ def hexagonal_sub(sub_comp, sub_sym, sub_a_val, sub_c_val, lattice_const_array ,
         film_comp = cust_print(accepted_lattice_const[i][0], accepted_lattice_const[i][1], accepted_lattice_const[i][2], 
                                accepted_lattice_const[i][3], accepted_lattice_const[i][4], accepted_lattice_const[i][5])
         result_file.write("{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, "C", accepted_lattice_const[i][6], sub_comp, sub_sym, sub_a_val))
-                               
+'''                               
 def upper_value(lattice_constant):
     """Calculate the maximum lattice constant based on the specified tolerance.
     
@@ -177,17 +178,17 @@ def cust_print(x_Al, x_Ga, x_In, y_P, y_As, y_Sb):
     """
     composition = ""
     if x_Al != 0.0:
-        composition += "Al"+'{0:{1}f}'.format(x_Al, 2)
+        composition += "Al"+'{0:.{1}f}'.format(x_Al, 2)
     if x_Ga != 0.0:
-        composition += "Ga"+'{0:{1}f}'.format(x_Ga, 2)
+        composition += "Ga"+'{0:.{1}f}'.format(x_Ga, 2)
     if x_In != 0.0:
-        composition += "In"+'{0:{1}f}'.format(x_In, 2)
-    if x_In != 0.0:
-        composition += "P"+'{0:{1}f}'.format(y_P, 2)
+        composition += "In"+'{0:.{1}f}'.format(x_In, 2)
+    if y_P != 0.0:
+        composition += "P"+'{0:.{1}f}'.format(y_P, 2)
     if y_As != 0.0:
-        composition += "As"+'{0:{1}f}'.format(y_As, 2)
+        composition += "As"+'{0:.{1}f}'.format(y_As, 2)
     if y_Sb != 0.0:
-        composition += "Sb"+'{0:{1}f}'.format(y_Sb, 2)
+        composition += "Sb"+'{0:.{1}f}'.format(y_Sb, 2)
     return composition
     
 def create_tolerance_array(input_array, sub_lattice_const):
