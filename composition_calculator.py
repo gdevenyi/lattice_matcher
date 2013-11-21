@@ -37,10 +37,10 @@ def check_substrate_file(sub_file, lattice_const_file, output_file):
     for i, l in enumerate(sub_file):
         if sub_file[i][1] == "C":
             cubic_sub(sub_file[i][0], sub_file[i][1], sub_file[i][2], lattice_const_file, output_file)
-        '''if sub_file[i][1] == "T":
+        if sub_file[i][1] == "T":
             tetragonal_sub(sub_file[i][0], sub_file[i][1], sub_file[i][2], sub_file[i][3], lattice_const_file, output_file)
         if sub_file[i][1] == "H":
-            hexagonal_sub(sub_file[i][0], sub_file[i][1], sub_file[i][2], sub_file[i][3], lattice_const_file, output_file)'''
+            hexagonal_sub(sub_file[i][0], sub_file[i][1], sub_file[i][2], sub_file[i][3], lattice_const_file, output_file)
 
 def cubic_sub(sub_comp, sub_sym, sub_a_val, lattice_const_array , result_file):
     """Calculates max/min lattice constant values for a cubic substrate.
@@ -70,7 +70,7 @@ def cubic_sub(sub_comp, sub_sym, sub_a_val, lattice_const_array , result_file):
     accepted_lattice_const45 = create_tolerance_array(lattice_const_array, (numpy.sqrt(2.0)*sub_a_val))
     if len(accepted_lattice_const45) == 0:
         pass
-    for i, line in enumerate(accepted_lattice_const):
+    for i, line in enumerate(accepted_lattice_const45):
         film_comp = cust_print(accepted_lattice_const45[i][0], accepted_lattice_const45[i][1], accepted_lattice_const45[i][2], 
                                accepted_lattice_const45[i][3], accepted_lattice_const45[i][4], accepted_lattice_const45[i][5])
         result_file.write("{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, "C (45deg)", accepted_lattice_const45[i][6], sub_comp, sub_sym, sub_a_val))
@@ -103,7 +103,7 @@ def tetragonal_sub(sub_comp, sub_sym, sub_a_val, sub_c_val, lattice_const_array 
     accepted_lattice_const45 = create_tolerance_array(lattice_const_array, (numpy.sqrt(2.0)*sub_a_val))
     if len(accepted_lattice_const45) == 0:
         pass
-    for i, line in enumerate(accepted_lattice_const):
+    for i, line in enumerate(accepted_lattice_const45):
         film_comp = cust_print(accepted_lattice_const45[i][0], accepted_lattice_const45[i][1], accepted_lattice_const45[i][2], 
                                accepted_lattice_const45[i][3], accepted_lattice_const45[i][4], accepted_lattice_const45[i][5])
         result_file.write("{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, "C (45deg)", accepted_lattice_const45[i][6], sub_comp, sub_sym, sub_a_val))
@@ -203,6 +203,8 @@ def create_tolerance_array(input_array, sub_lattice_const):
         out_array: an array with materials with lattice constants within the 
                    tolerance level
     """
+    if len(input_array) == 0:
+        pass
     temp = input_array[input_array[:, -1] >= lower_value(sub_lattice_const)]
     if len(temp) == 0:
         return temp
@@ -216,7 +218,7 @@ if __name__ == "__main__":
     results_file_label = "composition_matches_for_" + args.substrate[:-4] + ".txt"
     results_file = open(results_file_label, "w")
     substrate_file = numpy.genfromtxt(args.substrate, comments='#', delimiter="\t", dtype=None)
-    tolerance = 0.2 #high tolerance set to check if program works. Will reduce after testing
+    tolerance = 0.1 #high tolerance set to check if program works. Will reduce after testing
     #tolerance = args.tolerance # percent tolerance for lattice mismatch as decimal
     #load .npz lattice constant file
     initial_array = numpy.load("test_array_file.npz")
