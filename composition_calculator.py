@@ -25,6 +25,8 @@ def check_substrate_file(sub_file, lattice_const_file, output_file):
     
     Args:
         sub_file: database file with substrate material information
+        lattice_const_file: npz file containing lattice constants and composition
+                            information
         output_file: tab delimited .txt file where results are written
         
     Returns:
@@ -49,9 +51,9 @@ def cubic_sub(sub_comp, sub_sym, sub_a_val, lattice_consts , result_file):
         sub_comp: substrate composition
         sub_sym: substrate symmetry
         sub_a_val: value of lattice constant 'a'
-        lattice_const_array: numpy array of composition and lattice constants.
-                             Lattice constants must be the right-most entry in 
-                             each line of the array
+        lattice_consts: npz file of composition and lattice constants. Lattice 
+                        constants must be the right-most entry in each line of 
+                        the array
         result_file: a tab delimited .txt file with the calculated maximum and
                       minimum lattice constant values for a specified tolerance
                       value.
@@ -60,14 +62,14 @@ def cubic_sub(sub_comp, sub_sym, sub_a_val, lattice_consts , result_file):
         Writes a new line to the result_file which contains the results of the
         lattice constant comparision.    
     """    
-    good_vals = (lattice_consts[:,-1] > (1.-tolerance)*sub_a_val) & (lattice_consts[:,-1] < (1. + tolerance)*sub_a_val)
-    for i, line in enumerate(good_vals):
+    good_lattice_vals = (lattice_consts[:,-1] > (1. - tolerance)*sub_a_val) & (lattice_consts[:,-1] < (1. + tolerance)*sub_a_val)
+    for i, line in enumerate(good_lattice_vals):
         if line:
             film_comp = cust_print(lattice_consts[i][0], lattice_consts[i][1], lattice_consts[i][2], 
                                    lattice_consts[i][3], lattice_consts[i][4], lattice_consts[i][5])
             result_file.write("{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, "C", lattice_consts[i][6], sub_comp, sub_sym, sub_a_val))
-    good_vals45 = (lattice_consts[:,-1] > (1.-tolerance)*sub_a_val*numpy.sqrt(2.0)) & (lattice_consts[:,-1] < (1. + tolerance)*sub_a_val*numpy.sqrt(2.0))
-    for i, line in enumerate(good_vals45):
+    good_lattice_vals45 = (lattice_consts[:,-1] > (1. - tolerance)*sub_a_val*numpy.sqrt(2.0)) & (lattice_consts[:,-1] < (1. + tolerance)*sub_a_val*numpy.sqrt(2.0))
+    for i, line in enumerate(good_lattice_vals45):
         if line:
             film_comp = cust_print(lattice_consts[i][0], lattice_consts[i][1], lattice_consts[i][2], 
                                    lattice_consts[i][3], lattice_consts[i][4], lattice_consts[i][5])
@@ -138,7 +140,7 @@ def cust_print(x_Al, x_Ga, x_In, y_P, y_As, y_Sb):
     """Custom print function to simplify output of composition. Input arguments
     agree with the following rules:
             x_Al + x_Ga + x_In = 1
-            y_P + y_As + y_Sb = 1
+            y_P  + y_As + y_Sb = 1
             
     Args:
         x_Al: amount of Al in material 
@@ -173,9 +175,9 @@ if __name__ == "__main__":
     results_file = open(results_file_label, "w")
     substrate_file = numpy.genfromtxt(args.substrate, comments='#', delimiter="\t", dtype=None)
     tolerance = 0.005 
-    initial_array = numpy.load("test_array_file.npz")
-    lattice_constants = initial_array['arr_0']
-    initial_array.close()
+    npz_lattice_constant_database = numpy.load("test_array_file.npz")
+    lattice_constants = npz_lattice_constant_database['arr_0']
+    npz_lattice_constant_database.close()
     #call checker
     check_substrate_file(substrate_file, lattice_constants, results_file)
     results_file.close()
