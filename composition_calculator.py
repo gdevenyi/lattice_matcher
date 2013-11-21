@@ -19,7 +19,7 @@ parser = argparse.ArgumentParser(description="Software for calculating a range o
 parser.add_argument("substrate", type=str, help="File with substrate material data.")
 args = parser.parse_args()
 
-def check_substrate_file(sub_file, lattice_const_file, output_file):
+def check_substrate_file(sub_file, lattice_const_file, tolerance_percentage, output_file):
     """Calls functions for calculations based on the information obtained from
        a supplied database file.
     
@@ -27,6 +27,8 @@ def check_substrate_file(sub_file, lattice_const_file, output_file):
         sub_file: database file with substrate material information
         lattice_const_file: npz file containing lattice constants and composition
                             information
+        tolerance_percentage: tolerance percentage of mismatch error represented
+                              as a decimal value
         output_file: tab delimited .txt file where results are written
         
     Returns:
@@ -36,7 +38,7 @@ def check_substrate_file(sub_file, lattice_const_file, output_file):
     output_file.write("#Film Composition\tFilm Symmetry\tFlim a\tSubstrate\tSymmetry\n")
     for i, l in enumerate(sub_file):
         if sub_file[i][1] == "C":
-            cubic_sub(sub_file[i][0], sub_file[i][1], sub_file[i][2], lattice_const_file, output_file)
+            cubic_sub(sub_file[i][0], sub_file[i][1], sub_file[i][2], lattice_const_file, tolerance_percentage, output_file)
         '''
         if sub_file[i][1] == "T":
             tetragonal_sub(sub_file[i][0], sub_file[i][1], sub_file[i][2], sub_file[i][3], lattice_const_file, output_file)
@@ -44,7 +46,7 @@ def check_substrate_file(sub_file, lattice_const_file, output_file):
             hexagonal_sub(sub_file[i][0], sub_file[i][1], sub_file[i][2], sub_file[i][3], lattice_const_file, output_file)
         '''
 
-def cubic_sub(sub_comp, sub_sym, sub_a_val, lattice_consts , result_file):
+def cubic_sub(sub_comp, sub_sym, sub_a_val, lattice_consts, tol, result_file):
     """Calculates max/min lattice constant values for a cubic substrate.
     
     Args:
@@ -54,6 +56,7 @@ def cubic_sub(sub_comp, sub_sym, sub_a_val, lattice_consts , result_file):
         lattice_consts: npz file of composition and lattice constants. Lattice 
                         constants must be the right-most entry in each line of 
                         the array
+        tol: tolerance percentage of mismatch error represented as a decimal
         result_file: a tab delimited .txt file with the calculated maximum and
                       minimum lattice constant values for a specified tolerance
                       value.
@@ -62,13 +65,13 @@ def cubic_sub(sub_comp, sub_sym, sub_a_val, lattice_consts , result_file):
         Writes a new line to the result_file which contains the results of the
         lattice constant comparision.    
     """    
-    good_lattice_vals = (lattice_consts[:,-1] > (1. - tolerance)*sub_a_val) & (lattice_consts[:,-1] < (1. + tolerance)*sub_a_val)
+    good_lattice_vals = (lattice_consts[:,-1] > (1. - tol)*sub_a_val) & (lattice_consts[:,-1] < (1. + tol)*sub_a_val)
     for i, line in enumerate(good_lattice_vals):
         if line:
             film_comp = cust_print(lattice_consts[i][0], lattice_consts[i][1], lattice_consts[i][2], 
                                    lattice_consts[i][3], lattice_consts[i][4], lattice_consts[i][5])
             result_file.write("{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, "C", lattice_consts[i][6], sub_comp, sub_sym, sub_a_val))
-    good_lattice_vals45 = (lattice_consts[:,-1] > (1. - tolerance)*sub_a_val*numpy.sqrt(2.0)) & (lattice_consts[:,-1] < (1. + tolerance)*sub_a_val*numpy.sqrt(2.0))
+    good_lattice_vals45 = (lattice_consts[:,-1] > (1. - tol)*sub_a_val*numpy.sqrt(2.0)) & (lattice_consts[:,-1] < (1. + tol)*sub_a_val*numpy.sqrt(2.0))
     for i, line in enumerate(good_lattice_vals45):
         if line:
             film_comp = cust_print(lattice_consts[i][0], lattice_consts[i][1], lattice_consts[i][2], 
@@ -179,5 +182,5 @@ if __name__ == "__main__":
     lattice_constants = npz_lattice_constant_database['arr_0']
     npz_lattice_constant_database.close()
     #call checker
-    check_substrate_file(substrate_file, lattice_constants, results_file)
+    check_substrate_file(substrate_file, lattice_constants, tolerance, results_file)
     results_file.close()
