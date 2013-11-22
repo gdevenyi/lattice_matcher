@@ -10,8 +10,14 @@ Returns:
     Creates a compressed .npz file containing the composition information and
     the calculated lattice constants.
 """
-
+import argparse
 import numpy
+
+
+parser = argparse.ArgumentParser(description="Calculates the lattice constant 'a' for the entire parameter space which satisfies the III-V semidonductor composition equation found on the III-V Calc information page. <http://ahrenkiel.sdsmt.edu/III_V_Calc/info/>")
+parser.add_argument("resolution", type=int, help="The resolution of the step size in composition in percent where (1 = 1 percent).")
+parser.add_argument("output_file", type=str, help="Name of the compressed npz file where the array of composition and corresponding lattice constant is saved.")
+args = parser.parse_args()
 
 #define all reference lattice constants
 a_AlP = 5.4510
@@ -25,7 +31,7 @@ a_GaSb = 6.0950
 a_InSb = 6.4794
 
 #This sets the resolution of the steps in compsition in percent (1 = 1%)
-fraction_resolution = 1
+fraction_resolution = args.resolution
 
 #This code counts the number of iterations in order to pre-allocate a numpy array
 i = 0
@@ -51,4 +57,4 @@ for y_P in numpy.arange(0, 100 + fraction_resolution, fraction_resolution):
                 i+=1
 
 
-numpy.savez_compressed("lattice_constants", lst)
+numpy.savez_compressed(args.output_file, lst)
