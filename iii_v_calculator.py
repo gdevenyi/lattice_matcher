@@ -6,6 +6,9 @@
 satisfies the III-V semidonductor composition equation found on the III-V Calc
 information page. <http://ahrenkiel.sdsmt.edu/III_V_Calc/info/>
 
+WARNING: For small fractional_resolution values the code takes a long time to 
+         run and creates a large output file. 
+
 Returns:
     Creates a compressed .npz file containing the composition information and
     the calculated lattice constants.
