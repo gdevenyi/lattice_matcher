@@ -17,6 +17,7 @@ import argparse #for command line implementation
 
 parser = argparse.ArgumentParser(description="Software for calculating a range of material composition for an epitaxially grown film on a given substrate.")
 parser.add_argument("substrate", type=str, help="Tab-delimited txt file with substrate material data.")
+parser.add_argument("lattice_constant_database", type=str, help="Compressed npz file containing composition and lattice constant information.")
 args = parser.parse_args()
 
 def check_substrate_file(sub_file, lattice_const_file, tolerance_percentage, output_file):
@@ -178,7 +179,7 @@ if __name__ == "__main__":
     results_file = open(results_file_label, "w")
     substrate_file = numpy.genfromtxt(args.substrate, comments='#', delimiter="\t", dtype=None)
     tolerance = 0.1  
-    npz_lattice_constant_database = numpy.load("test_array_file.npz")
+    npz_lattice_constant_database = numpy.load(args.lattice_constant_database)
     lattice_constants = npz_lattice_constant_database['arr_0']
     npz_lattice_constant_database.close()
     #call checker
