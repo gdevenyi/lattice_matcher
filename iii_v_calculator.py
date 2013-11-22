@@ -24,18 +24,31 @@ a_AlSb = 6.1355
 a_GaSb = 6.0950
 a_InSb = 6.4794
 
-lst = numpy.zeros((26532801, 7), dtype=numpy.float32) #Pre allocate a numpy array of float32, which is enough precision, size is the number of iterations the below code does
+#This sets the resolution of the steps in compsition in percent (1 = 1%)
+fraction_resolution = 1
+
+#This code counts the number of iterations in order to pre-allocate a numpy array
 i = 0
-for y_P in numpy.arange(0, 101, 1):
-    for y_As in numpy.arange(0, 101 - y_P, 1):
-        for x_Al in numpy.arange(0, 101, 1):
-            for x_Ga in numpy.arange(0, 101 - x_Al, 1):
+for y_P in numpy.arange(0, 100 + fraction_resolution, fraction_resolution):
+    for y_As in numpy.arange(0, 100 + fraction_resolution - y_P, fraction_resolution):
+        for x_Al in numpy.arange(0, 100 + fraction_resolution, fraction_resolution):
+            for x_Ga in numpy.arange(0, 100 + fraction_resolution - x_Al, fraction_resolution):
+                i+=1
+
+lst = numpy.zeros((i, 7), dtype=numpy.float32) #Pre allocate a numpy array of float32, which is enough precision, size is the number of iterations the below code does
+
+i = 0
+for y_P in numpy.arange(0, 100 + fraction_resolution, fraction_resolution):
+    for y_As in numpy.arange(0, 100 + fraction_resolution - y_P, fraction_resolution):
+        for x_Al in numpy.arange(0, 100 + fraction_resolution, fraction_resolution):
+            for x_Ga in numpy.arange(0, 100 + fraction_resolution - x_Al, fraction_resolution):
                 y_Sb = 100 - y_P - y_As
                 x_In = 100 - x_Al - x_Ga
-
                 a = (y_P*(x_Al*a_AlP + x_Ga*a_GaP + x_In*a_InP) + \
                 y_As*(x_Al*a_AlAs + x_Ga*a_GaAs + x_In*a_InAs) + \
                 y_Sb*(x_Al*a_AlSb + x_Ga*a_GaSb + x_In*a_InSb))/10000.0
-		lst[i] = [x_Al/100.0, x_Ga/100.0, x_In/100.0, y_P/100.0, y_As/100.0, y_Sb/100.0, a]
-		i = i+1
+                lst[i] = [x_Al/100.0, x_Ga/100.0, x_In/100.0, y_P/100.0, y_As/100.0, y_Sb/100.0, a]
+                i+=1
+
+
 numpy.savez_compressed("lattice_constants", lst)
