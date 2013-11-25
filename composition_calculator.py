@@ -70,14 +70,13 @@ def cubic_sub(sub_comp, sub_sym, sub_a_val, lattice_consts, tol, result_file):
         if line:
             film_comp = cust_print(lattice_consts[i][0], lattice_consts[i][1], lattice_consts[i][2], 
                                    lattice_consts[i][3], lattice_consts[i][4], lattice_consts[i][5])
-            result_file.write("{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, "C", round(lattice_consts[i][6], 4), sub_comp, sub_sym, sub_a_val))
+            result_file.write("{}\t{}\t{}\t{}\t{}\n".format(film_comp, "C", round(lattice_consts[i][6], 4), sub_comp, sub_sym))
     good_lattice_vals45 = (lattice_consts[:,-1] > (1. - tol)*sub_a_val*numpy.sqrt(2.0)) & (lattice_consts[:,-1] < (1. + tol)*sub_a_val*numpy.sqrt(2.0))
     for i, line in enumerate(good_lattice_vals45):
         if line:
             film_comp = cust_print(lattice_consts[i][0], lattice_consts[i][1], lattice_consts[i][2], 
                                    lattice_consts[i][3], lattice_consts[i][4], lattice_consts[i][5])
-            result_file.write("{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, "C (45deg)", round(lattice_consts[i][6], 4), sub_comp, sub_sym, sub_a_val))
-
+            result_file.write("{}\t{}\t{}\t{}\t{}\n".format(film_comp, "C (45deg)", round(lattice_consts[i][6], 4), sub_comp, sub_sym))
                            
 def tetragonal_sub(sub_comp, sub_sym, sub_a_val, sub_c_val, lattice_consts, tol, result_file):
     """Calculates max/min lattice constant values for a tetragonal substrate.
@@ -103,13 +102,13 @@ def tetragonal_sub(sub_comp, sub_sym, sub_a_val, sub_c_val, lattice_consts, tol,
         if line:
             film_comp = cust_print(lattice_consts[i][0], lattice_consts[i][1], lattice_consts[i][2], 
                                    lattice_consts[i][3], lattice_consts[i][4], lattice_consts[i][5])
-            result_file.write("{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, "C", round(lattice_consts[i][6], 4), sub_comp, sub_sym, sub_a_val))
+            result_file.write("{}\t{}\t{}\t{}\t{}\n".format(film_comp, "C", round(lattice_consts[i][6], 4), sub_comp, sub_sym))
     good_lattice_vals45 = (lattice_consts[:,-1] > (1. - tol)*sub_a_val*numpy.sqrt(2.0)) & (lattice_consts[:,-1] < (1. + tol)*sub_a_val*numpy.sqrt(2.0))
     for i, line in enumerate(good_lattice_vals45):
         if line:
             film_comp = cust_print(lattice_consts[i][0], lattice_consts[i][1], lattice_consts[i][2], 
                                    lattice_consts[i][3], lattice_consts[i][4], lattice_consts[i][5])
-            result_file.write("{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, "C (45deg)", round(lattice_consts[i][6], 4), sub_comp, sub_sym, sub_a_val))
+            result_file.write("{}\t{}\t{}\t{}\t{}\n".format(film_comp, "C (45deg)", round(lattice_consts[i][6], 4), sub_comp, sub_sym))
             
 
 def hexagonal_sub(sub_comp, sub_sym, sub_a_val, sub_c_val, lattice_consts, tol, result_file):
@@ -136,7 +135,7 @@ def hexagonal_sub(sub_comp, sub_sym, sub_a_val, sub_c_val, lattice_consts, tol, 
         if line:
             film_comp = cust_print(lattice_consts[i][0], lattice_consts[i][1], lattice_consts[i][2], 
                                    lattice_consts[i][3], lattice_consts[i][4], lattice_consts[i][5])
-            result_file.write("{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, "C (111)", round(lattice_consts[i][6], 4), sub_comp, sub_sym, sub_a_val))
+            result_file.write("{}\t{}\t{}\t{}\t{}\n".format(film_comp, "C (111)", round(lattice_consts[i][6], 4), sub_comp, sub_sym))
     
 def cust_print(x_Al, x_Ga, x_In, y_P, y_As, y_Sb):
     """Custom print function to simplify output of composition. Input arguments
