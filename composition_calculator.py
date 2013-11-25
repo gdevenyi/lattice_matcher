@@ -112,8 +112,8 @@ def tetragonal_sub(sub_comp, sub_sym, sub_a_val, sub_c_val, lattice_consts, tol,
                                    lattice_consts[i][3], lattice_consts[i][4], lattice_consts[i][5])
             result_file.write("{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, "C (45deg)", round(lattice_consts[i][6], 4), sub_comp, sub_sym, sub_a_val))
             
-'''
-def hexagonal_sub(sub_comp, sub_sym, sub_a_val, sub_c_val, lattice_const_array , result_file):
+
+def hexagonal_sub(sub_comp, sub_sym, sub_a_val, sub_c_val, lattice_consts, tol, result_file):
     """Calculates max/min lattice constant values for a hexagonal substrate.
     
     Args:
@@ -121,9 +121,10 @@ def hexagonal_sub(sub_comp, sub_sym, sub_a_val, sub_c_val, lattice_const_array ,
         sub_sym: substrate symmetry
         sub_a_val: value of lattice constant 'a'
         sub_c_val: value of lattice constant 'c'
-        lattice_const_array: numpy array of composition and lattice constants.
-                             Lattice constants must be the right-most entry in 
-                             each line of the array
+        lattice_consts: npz file of composition and lattice constants. Lattice 
+                        constants must be the right-most entry in each line of 
+                        the array
+        tol: tolerance percentage of mismatch error represented as a decimal
         result_file: a tab delimited .txt file with the calculated maximum and
                       minimum lattice constant values for a specified tolerance
                       value.
@@ -131,14 +132,12 @@ def hexagonal_sub(sub_comp, sub_sym, sub_a_val, sub_c_val, lattice_const_array ,
         Writes a new line to the result_file which contains the results of the
         lattice constant comparision.    
     """
-    accepted_lattice_const = create_tolerance_array(lattice_const_array, (sub_a_val*numpy.sqrt(2.0)))
-    if len(accepted_lattice_const) == 0:
-        pass
-    for i, line in enumerate(accepted_lattice_const):
-        film_comp = cust_print(accepted_lattice_const[i][0], accepted_lattice_const[i][1], accepted_lattice_const[i][2], 
-                               accepted_lattice_const[i][3], accepted_lattice_const[i][4], accepted_lattice_const[i][5])
-        result_file.write("{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, "C", accepted_lattice_const[i][6], sub_comp, sub_sym, sub_a_val))
-'''                               
+    good_lattice_vals = (lattice_consts[:,-1] > (1. - tol)*sub_a_val*numpy.sqrt(2.0)) & (lattice_consts[:,-1] < (1. + tol)*sub_a_val*numpy.sqrt(2.0))
+    for i, line in enumerate(good_lattice_vals):
+        if line:
+            film_comp = cust_print(lattice_consts[i][0], lattice_consts[i][1], lattice_consts[i][2], 
+                                   lattice_consts[i][3], lattice_consts[i][4], lattice_consts[i][5])
+            result_file.write("{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, "C (111)", round(lattice_consts[i][6], 4), sub_comp, sub_sym, sub_a_val))
     
 def cust_print(x_Al, x_Ga, x_In, y_P, y_As, y_Sb):
     """Custom print function to simplify output of composition. Input arguments
