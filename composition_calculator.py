@@ -42,10 +42,9 @@ def check_substrate_file(sub_file, lattice_const_file, tolerance_percentage, out
             cubic_sub(sub_file[i][0], sub_file[i][1], sub_file[i][2], lattice_const_file, tolerance_percentage, output_file)
         if sub_file[i][1] == "T":
             tetragonal_sub(sub_file[i][0], sub_file[i][1], sub_file[i][2], sub_file[i][3], lattice_const_file, tolerance_percentage, output_file)
-        '''
         if sub_file[i][1] == "H":
-            hexagonal_sub(sub_file[i][0], sub_file[i][1], sub_file[i][2], sub_file[i][3], lattice_const_file, output_file)
-        '''
+            hexagonal_sub(sub_file[i][0], sub_file[i][1], sub_file[i][2], sub_file[i][3], lattice_const_file, tolerance_percentage, output_file)
+
 
 def cubic_sub(sub_comp, sub_sym, sub_a_val, lattice_consts, tol, result_file):
     """Calculates max/min lattice constant values for a cubic substrate.
