@@ -158,18 +158,12 @@ def cust_print(x_Al, x_Ga, x_In, y_P, y_As, y_Sb):
         composition: a string representing the composition formula 
     """
     composition = ""
-    if x_Al != 0.0:
-        composition += "Al"+'{0:.{1}f}'.format(x_Al, 2)
-    if x_Ga != 0.0:
-        composition += "Ga"+'{0:.{1}f}'.format(x_Ga, 2)
-    if x_In != 0.0:
-        composition += "In"+'{0:.{1}f}'.format(x_In, 2)
-    if y_P != 0.0:
-        composition += "P"+'{0:.{1}f}'.format(y_P, 2)
-    if y_As != 0.0:
-        composition += "As"+'{0:.{1}f}'.format(y_As, 2)
-    if y_Sb != 0.0:
-        composition += "Sb"+'{0:.{1}f}'.format(y_Sb, 2)
+    composition += "Al"+'{0:.{1}f}'.format(x_Al, 2)
+    composition += "Ga"+'{0:.{1}f}'.format(x_Ga, 2)
+    composition += "In"+'{0:.{1}f}'.format(x_In, 2)
+    composition += "P"+'{0:.{1}f}'.format(y_P, 2)
+    composition += "As"+'{0:.{1}f}'.format(y_As, 2)
+    composition += "Sb"+'{0:.{1}f}'.format(y_Sb, 2)
     return composition
     
 
@@ -178,7 +172,8 @@ if __name__ == "__main__":
     results_file_label = "composition_matches_for_" + args.substrate[:-4] + ".txt"
     results_file = open(results_file_label, "w")
     substrate_file = numpy.genfromtxt(args.substrate, comments='#', delimiter="\t", dtype=None)
-    tolerance = 0.1  
+    # Tolerance is set narrow becuase there are a large number of outputs which causes the code to take a very long time to run
+    tolerance = 0.005  
     npz_lattice_constant_database = numpy.load(args.lattice_constant_database)
     lattice_constants = npz_lattice_constant_database['arr_0']
     npz_lattice_constant_database.close()
