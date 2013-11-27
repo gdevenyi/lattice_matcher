@@ -37,12 +37,19 @@ def check_substrate_file(sub_file, lattice_const_file, tolerance_percentage, out
         to the lattice constants of the substrate material. 
     """
     output_file.write("#Film Composition\tFilm Symmetry\tFlim a\tSubstrate\tSymmetry\n")
-    for i, l in enumerate(sub_file):
-        if sub_file[i][1] == "C":
+    
+    cubic_sym = (substrate_file['Symmetry'] == "C")
+    tetragonal_sym = (substrate_file['Symmetry'] == "T")
+    hexagonal_sym = (substrate_file['Symmetry'] == "H")
+
+    for i, line in enumerate(cubic_sym):
+        if line:
             cubic_sub(sub_file[i][0], sub_file[i][1], sub_file[i][2], lattice_const_file, tolerance_percentage, output_file)
-        if sub_file[i][1] == "T":
+    for i, line in enumerate(tetragonal_sym):
+        if line:
             tetragonal_sub(sub_file[i][0], sub_file[i][1], sub_file[i][2], sub_file[i][3], lattice_const_file, tolerance_percentage, output_file)
-        if sub_file[i][1] == "H":
+    for i, line in enumerate(hexagonal_sym):
+        if line:
             hexagonal_sub(sub_file[i][0], sub_file[i][1], sub_file[i][2], sub_file[i][3], lattice_const_file, tolerance_percentage, output_file)
 
 
