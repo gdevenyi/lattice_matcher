@@ -172,7 +172,7 @@ if __name__ == "__main__":
     # create a label for the matches file.
     results_file_label = "composition_matches_for_" + args.substrate[:-4] + ".txt"
     results_file = open(results_file_label, "w")
-    substrate_file = numpy.genfromtxt(args.substrate, comments='#', delimiter="\t", dtype=None)
+    substrate_file = numpy.genfromtxt(args.substrate, names=True, comments='#', dtype=None)
     # Tolerance is set narrow becuase there are a large number of outputs which causes the code to take a very long time to run
     tolerance = 0.005  
     npz_lattice_constant_database = numpy.load(args.lattice_constant_database)
