@@ -69,8 +69,8 @@ def cubic_sub(sub_comp, sub_sym, sub_a_val, lattice_consts, tol, result_file):
                       value.
         
     Returns:
-        Writes a new line to the result_file which contains the results of the
-        lattice constant comparision.    
+        Writes all found matches of materials for the given substrate symmetry
+        and lattice constants to the results file.
     """
     result_string = ""    
     good_lattice_vals = (lattice_consts[:,-1] > (1. - tol)*sub_a_val) & (lattice_consts[:,-1] < (1. + tol)*sub_a_val)
@@ -102,8 +102,8 @@ def tetragonal_sub(sub_comp, sub_sym, sub_a_val, sub_c_val, lattice_consts, tol,
                       minimum lattice constant values for a specified tolerance
                       value.
     Returns:
-        Writes a new line to the result_file which contains the results of the
-        lattice constant comparision.    
+        Writes all found matches of materials for the given substrate symmetry
+        and lattice constants to the results file.
     """
     result_string = ""
     good_lattice_vals = (lattice_consts[:,-1] > (1. - tol)*sub_a_val) & (lattice_consts[:,-1] < (1. + tol)*sub_a_val)
@@ -136,8 +136,8 @@ def hexagonal_sub(sub_comp, sub_sym, sub_a_val, sub_c_val, lattice_consts, tol, 
                       minimum lattice constant values for a specified tolerance
                       value.
     Returns:
-        Writes a new line to the result_file which contains the results of the
-        lattice constant comparision.    
+        Writes all found matches of materials for the given substrate symmetry
+        and lattice constants to the results file.
     """
     result_string = ""
     good_lattice_vals = (lattice_consts[:,-1] > (1. - tol)*sub_a_val*numpy.sqrt(2.0)) & (lattice_consts[:,-1] < (1. + tol)*sub_a_val*numpy.sqrt(2.0))
