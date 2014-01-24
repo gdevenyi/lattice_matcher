@@ -116,8 +116,9 @@ def cubic_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a, out
             output_file.write("{}\t{} (110)\t{}\t{} (a-plane)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c, ratio_c, original_ratio_c))
     elif sub_sym == "H":
         # called if the substrate has hexagonal symmetry
+        r_plane_c = numpy.sqrt((sub_c**2)+(3*(sub_a**2))) #side length for camparison of r-plane hex side lengths
         original_ratio_a_111 = sub_a/(numpy.sqrt(2.0)*film_a) #ratio of a-values for cubic (111) matches
-        original_ratio_a = sub_a/film_a #ratio of a-values
+        original_ratio_a = (numpy.sqrt(3.0)*sub_a)/film_a #ratio of values for a-plane check
         original_ratio_c = sub_c/(numpy.sqrt(2.0)*film_a) #cubic (110) on a-plane hexagonal c-value ratio
         original_ratio_c_r = numpy.sqrt((sub_c**2)+(3*(sub_a**2)))/(numpy.sqrt(2.0)*film_a) #cubic (110) on r-plane hexagonal c-value ratio
         ratio_a_111 = round_ratio(original_ratio_a_111)
@@ -125,10 +126,9 @@ def cubic_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a, out
         ratio_c = round_ratio(original_ratio_c)
         ratio_c_r = round_ratio(original_ratio_c_r)
         mismatch_a_111 = ((sub_a - (ratio_a_111*film_a*numpy.sqrt(2.0))) / sub_a)
-        mismatch_a = ((sub_a - (ratio_a*film_a)) / sub_a)
+        mismatch_a = ((numpy.sqrt(3.0)*sub_a - (ratio_a*film_a)) / numpy.sqrt(3.0)*sub_a)
         mismatch_c = ((sub_c - (ratio_c*film_a*numpy.sqrt(2.0))) / sub_c)
         mismatch_c_r = ((numpy.sqrt((sub_c**2)+(3*(sub_a**2))) - (ratio_c_r*film_a*numpy.sqrt(2.0))) / numpy.sqrt((sub_c**2)+(3*(sub_a**2))))
-        r_plane_c = numpy.sqrt((sub_c**2)+(3*(sub_a**2))) #side length for camparison of r-plane hex side lengths
         if abs(mismatch_a_111) < tolerance:
             output_file.write("{}\t{} (111)\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a_111, ratio_a_111, original_ratio_a_111))
         if ratio_check(sub_c, sub_a) < tolerance and abs(mismatch_c) and abs(mismatch_a) < tolerance:
@@ -231,7 +231,7 @@ def hexagonal_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a,
         # called if the substrate has cubic symmetry
         r_plane_c = numpy.sqrt((sub_c**2)+(3*(sub_a**2))) # 'c-value' of the r-plane hex
         original_ratio_a_111 = (numpy.sqrt(2.0)*sub_a)/film_a # ratio of a values for hex on cubic 111
-        original_ratio_a = sub_a/film_a # ratio of a-values
+        original_ratio_a = sub_a/(numpy.sqrt(3.0)*film_a) # ratio of values for a-plane check
         original_ratio_c = (numpy.sqrt(2.0)*sub_a)/film_a # ratio of c-values
         original_ratio_c_r = (numpy.sqrt(2.0)*sub_a)/r_plane_c
         ratio_a_111 = round_ratio(original_ratio_a_111)
@@ -239,7 +239,7 @@ def hexagonal_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a,
         ratio_c = round_ratio(original_ratio_c)
         ratio_c_r = round_ratio(original_ratio_c_r)
         mismatch_a_111 = ((numpy.sqrt(2.0)*sub_a - ratio_a_111*film_a) / numpy.sqrt(2.0)*sub_a)
-        mismatch_a = ((sub_a - ratio_a*film_a) / sub_a)
+        mismatch_a = ((sub_a - ratio_a*numpy.sqrt(3.0)*film_a) / sub_a)
         mismatch_c = ((numpy.sqrt(2.0)*sub_a - ratio_c*film_c) / numpy.sqrt(2.0)*sub_a)
         mismatch_c_r = ((numpy.sqrt(2.0)*sub_a - ratio_c_r*r_plane_c) / numpy.sqrt(2.0)*sub_a)
         if abs(mismatch_a_111) < tolerance:
