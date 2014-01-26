@@ -225,7 +225,7 @@ def hexagonal_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a,
         output line (with column labels) is:
         
         Film    Symm    Sub     Symm    Mismatch    Rounded Ratio   Original Ratio   
-        Co      H       C(111)  C       0.076       2               2.012
+        Co      H       Ni      C       0.076       2               2.012
     """
     if sub_sym == "C":
         # called if the substrate has cubic symmetry
@@ -266,11 +266,23 @@ def hexagonal_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a,
             output_file.write("{}\t{} (r-plane)\t{}\t{} (a-plane)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c_r, ratio_c_r, original_ratio_c_r))
     elif sub_sym == "H":
         # called if the substrate has hexagonal symmetry
+        film_r_plane_c = numpy.sqrt((film_c**2)+(3*(film_a**2))) #film r-plane sidelength
+        sub_r_plane_c = numpy.sqrt((sub_c**2)+(3*(sub_a**2))) #film r-plane sidelength
         original_ratio_a = sub_a/film_a #ratio of a-values
+        original_ratio_c = sub_c/film_c #ratio of c-values
+        original_ratio_c_r = sub_r_plane_c/film_r_plane_c #ratio of r-plane values
         ratio_a = round_ratio(original_ratio_a)
+        ratio_c = round_ratio(original_ratio_c)
+        ratio_c_r = round_ratio(original_ratio_c_r)
         mismatch_a = ((sub_a - ratio_a*film_a) / sub_a)
+        mismatch_c = ((sub_c - ratio_a*film_c) / sub_c)
+        mismatch_c_r = ((sub_r_plane_c - ratio_a*film_r_plane_c) / sub_r_plane_c)
         if abs(mismatch_a) < tolerance:
             output_file.write("{}\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a))
+        if abs(mismatch_a) < tolerance and abs(mismatch_c) < tolerance:
+            output_file.write("{}\t{} (a-plane)\t{}\t{} (a-plane)\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a))
+        if abs(mismatch_a) < tolerance and abs(mismatch_c_r) < tolerance:
+            output_file.write("{}\t{} (r-plane)\t{}\t{} (r-plane)\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a))
 
 def round_ratio(original_ratio):
     """Rounds a ratio to an integer value.
