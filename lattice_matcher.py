@@ -191,15 +191,18 @@ def tetragonal_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a
     elif sub_sym == "H":
         # called if the substrate has hexagonal symmetry
         original_ratio_a = sub_a/film_a #tetragonal against hexagonal a-values
+        original_ratio_a_a = numpy.sqrt(3.0)*sub_a/film_a #ratio of a values for a-plane hexagonal
         original_ratio_c = sub_c/film_c # tetragonal against hexagonal c-values
         original_ratio_c_r = numpy.sqrt((sub_c**2)+(3*(sub_a**2)))/film_c # uses 'c-value' for r-plane hexagonal
         ratio_a = round_ratio(original_ratio_a)
+        ratio_a_a = round_ratio(original_ratio_a_a)
         ratio_c = round_ratio(original_ratio_c)
         ratio_c_r = round_ratio(original_ratio_c_r)
         mismatch_a = ((sub_a - ratio_a*film_a) / sub_a)
+        mismatch_a_a = ((numpy.sqrt(3.0)*sub_a - ratio_a_a*film_a) / numpy.sqrt(3.0)*sub_a)
         mismatch_c = ((sub_c - ratio_c*film_c) / sub_c)
         mismatch_c_r = ((numpy.sqrt((sub_c**2)+(3*(sub_a**2))) - ratio_c_r*film_c) / numpy.sqrt((sub_c**2)+(3*(sub_a**2))))
-        if abs(mismatch_a) < tolerance and abs(mismatch_c) < tolerance:
+        if abs(mismatch_a_a) < tolerance and abs(mismatch_c) < tolerance:
             output_file.write("{}\t{} (a-plane)\t{}\t{} (a-plane)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c, ratio_c, original_ratio_c))
         if abs(mismatch_a) < tolerance and abs(mismatch_c_r) < tolerance:
             output_file.write("{}\t{} (a-plane)\t{}\t{} (r-plane)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c_r, ratio_c_r, original_ratio_c_r))
@@ -252,15 +255,18 @@ def hexagonal_film(film_comp, film_sym, sub_comp, sub_sym, sub_a, sub_c, film_a,
         # called if the substrate has tetragonal symmetry
         r_plane_c = numpy.sqrt((film_c**2)+(3*(film_a**2))) #side length for camparison of r-plane hex side lengths
         original_ratio_a = sub_a/film_a # ratio of a-values
+        original_ratio_a_a = sub_a/(numpy.sqrt(3.0)*film_a) #ratio of a values for a-plane hexagonal
         original_ratio_c = sub_c/film_c #ratio of c-values
         original_ratio_c_r = sub_c/r_plane_c # ratio using the 'c-value' side length of r-plane hex
         ratio_a = round_ratio(original_ratio_a)
+        ratio_a_a = round_ratio(original_ratio_a_a)
         ratio_c = round_ratio(original_ratio_c)
         ratio_c_r = round_ratio(original_ratio_c_r)
         mismatch_a = ((sub_a - ratio_a*film_a) / sub_a)
+        mismatch_a_a = ((sub_a - ratio_a_a*numpy.sqrt(3.0)*film_a) / sub_a)
         mismatch_c = ((sub_c - ratio_c*film_c) / sub_c)
         mismatch_c_r = ((sub_c - ratio_c_r*r_plane_c) / sub_c)
-        if abs(mismatch_a) < tolerance and abs(mismatch_c) < tolerance:
+        if abs(mismatch_a_a) < tolerance and abs(mismatch_c) < tolerance:
             output_file.write("{}\t{} (a-plane)\t{}\t{} (a-plane)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c, ratio_c, original_ratio_c))
         if abs(mismatch_a) < tolerance and abs(mismatch_c_r) < tolerance:
             output_file.write("{}\t{} (r-plane)\t{}\t{} (a-plane)\t{}\t{}\t{}\t{}\t{}\t{}\n".format(film_comp, film_sym, sub_comp, sub_sym, mismatch_a, ratio_a, original_ratio_a, mismatch_c_r, ratio_c_r, original_ratio_c_r))
