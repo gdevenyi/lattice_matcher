@@ -42,6 +42,7 @@
 %% The amsthm package provides extended theorem environments
 \usepackage{amsthm}
 \usepackage{amsmath}
+\usepackage{subcaption}
 
 %% The lineno packages adds line numbers. Start line numbering with
 %% \begin{linenumbers}, end it with \end{linenumbers}. Or switch it on
@@ -51,6 +52,7 @@
 \journal{Computational Material Science}
 
 \begin{document}
+
 
 \begin{frontmatter}
 
@@ -128,6 +130,16 @@ The first extension of the lattice match equation is the introduction of the sub
 
 The second extension of the lattice mismatch equation is the introduction of 2D surface nets. The 2D surface net is a construction formed by slicing through various high symmetry (low index) miller indices of 3D crystal lattices, resulting in a 2D projection of the 3D lattice. These 2D projections have different symmetry than the 3D lattice, revealing new symmetry matches between films and substrates. This is most clearly illustrated by high symmetry cuts through cubic crystals, as shown in Figure 1. A cubic crystal cut along a cube face {001}, presents a square 2D surface net, cut along {011} presents a rectangular 2D surface net (side length $\sqrt(2)a$), and cut along \{111\} presents a triangular surface net (side length $\sqrt(2)a$). This means that while we would typically consider a cubic crystal to have square-on-square lattice matches, it could also successfully tile substrates that present rectangular or triangular surface nets.
 \begin{figure}
+    \centering
+\begin{subfigure}{0.3\textwidth}
+    \includegraphics{{graphics/cubic_010.svg}.pdf}
+\end{subfigure}\quad
+\begin{subfigure}{0.3\textwidth}
+    \includegraphics{{graphics/cubic_110.svg}.pdf}
+\end{subfigure}\quad
+\begin{subfigure}{0.3\textwidth}
+    \includegraphics{{graphics/cubic_111.svg}.pdf}
+\end{subfigure}
     \caption{The three low index planes of cubic crystals a) (100) b) (110) and c) (111) \label{fig:cubic_planes}}
 \end{figure}
 
@@ -135,16 +147,34 @@ The other primary crystal systems of interest for epitaxy are the tetragonal and
 
 For the tetragonal crystal system, cuts along (001) present a square 2D surface net, while cuts along (100) and (010) present rectangular symmetry, as shown in Figure 2.
 \begin{figure}
+    \centering
+    \begin{subfigure}{0.3\textwidth}
+        \includegraphics{{graphics/base_tetragonal_original.svg}.pdf}
+    \end{subfigure}\qquad
+    \begin{subfigure}{0.3\textwidth}
+        \includegraphics{{graphics/tetragonal_a-plane.svg}.pdf}
+    \end{subfigure}
     \caption{The two low index planes of tetragonal crystals a) (100) and b) (010) \label{fig:tetra_planes}}
 \end{figure}
 
 For the hexagonal crystal system, cuts along (0001) (c-plane) are typically interpreted as presenting 2D surface nets with hexagonal symmetry, however the 2D surface net also supports two equivalent orientations of triangular symmetry[cite]. Other cuts through the crystal (1120) (a-plane) and (1012) (r-plane) present rectangular 2D surface nets.
 \begin{figure}
-    \caption{The three low index planes of hexagonal crystals a) (0001) FIND OTHER NAMES \label{fig:hex_planes}}
+        \centering
+        \begin{subfigure}{0.3\textwidth}
+            \includegraphics{{graphics/hexagonal_0001.svg}.pdf}
+        \end{subfigure}\quad
+        \begin{subfigure}{0.3\textwidth}
+            \includegraphics{{graphics/hexagonal_a-plane.svg}.pdf}
+        \end{subfigure}\quad
+        \begin{subfigure}{0.3\textwidth}
+            \includegraphics{{graphics/hexagonal_r-plane.svg}.pdf}
+        \end{subfigure}
+    \caption{The three low index planes of hexagonal crystals a) (0001) b) a-plane c) r-plane \label{fig:hex_planes}}
 \end{figure}
 
 With the side lengths of each of the 2D surface nets now defined in terms of the original crystal lattice constants, and the definition of the lattice ratio parameter, we can now describe all of the possible symmetry-allowed lattice matches between cubic, tetragonal and hexagonal crystal systems, outlined in Figure 4.
 \begin{figure}
+    \includegraphics[width=\textwidth]{{graphics/grid2.svg}.pdf}
     \caption{Lattice match between films ($a_f$) and substrates ($a_s$) computed using surface net matching\label{fig:match_matrix}}
 \end{figure}
 
@@ -186,15 +216,6 @@ In this article we have presented an extension to the lattice match calculations
 
 %% else use the following coding to input the bibitems directly in the
 %% TeX file.
-
-\begin{thebibliography}{00}
-
-%% \bibitem{label}
-%% Text of bibliographic item
-
-\bibitem{}
-
-\end{thebibliography}
 \end{document}
 \endinput
 %%
