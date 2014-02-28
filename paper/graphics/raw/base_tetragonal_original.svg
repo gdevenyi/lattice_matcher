@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg:svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="131.5"
+   height="121.5"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="base_tetragonal_original.svg">
+  <svg:defs
+     id="defs4">
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="-790 : 574.75252 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective2985" />
+  </svg:defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="5.2296119"
+     inkscape:cx="64.273621"
+     inkscape:cy="64.27362"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer3"
+     showgrid="true"
+     inkscape:window-width="959"
+     inkscape:window-height="1015"
+     inkscape:window-x="959"
+     inkscape:window-y="27"
+     inkscape:window-maximized="0"
+     inkscape:snap-bbox="true"
+     inkscape:snap-global="true"
+     units="cm"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0">
+    <inkscape:grid
+       type="xygrid"
+       id="grid3961"
+       empspacing="5"
+       visible="true"
+       enabled="true"
+       snapvisiblegridlinesonly="true"
+       originx="-9.25px"
+       originy="-9.2500012px" />
+  </sodipodi:namedview>
+  <svg:metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </svg:metadata>
+  <svg:g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="Cube - grey lines"
+     transform="translate(-9.25,-921.61088)">
+    <svg:path
+       style="fill:#afc6e9;stroke:#000000;stroke-width:0.67032963px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
+       d="m 10.335164,981.69605 0,60.32965 60.32967,0 0,-60.32965 -60.32967,0 0,0 0,0"
+       id="path4094"
+       inkscape:connector-curvature="0" />
+    <svg:path
+       style="fill:none;stroke:#808080;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 80,17.047241 0,60 60,0"
+       id="path3909"
+       inkscape:connector-curvature="0"
+       transform="translate(0,905.31364)" />
+    <svg:path
+       style="fill:none;stroke:#808080;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 10,137.04724 70,-59.999999 0,0"
+       id="path3911"
+       inkscape:connector-curvature="0"
+       transform="translate(0,905.31364)" />
+    <svg:text
+       xml:space="preserve"
+       style="font-size:10px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="34.101562"
+       y="1039.0708"
+       id="text3046-1"
+       sodipodi:linespacing="125%"><svg:tspan
+         sodipodi:role="line"
+         id="tspan3048-3"
+         x="34.101562"
+         y="1039.0708"
+         style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:cmr10;-inkscape-font-specification:cmr10">a</svg:tspan></svg:text>
+    <svg:text
+       sodipodi:linespacing="125%"
+       id="text3016"
+       y="1007.0914"
+       x="93.164062"
+       style="font-size:10px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       xml:space="preserve"><svg:tspan
+         style="font-size:24px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:cmr10;-inkscape-font-specification:cmr10"
+         y="1007.0914"
+         x="93.164062"
+         id="tspan3018"
+         sodipodi:role="line">c</svg:tspan></svg:text>
+  </svg:g>
+  <svg:g
+     inkscape:groupmode="layer"
+     id="layer4"
+     inkscape:label="Cube - black lines"
+     transform="translate(-9.25,-921.61088)">
+    <svg:path
+       style="fill:none;stroke:#000000;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 10.5,981.86096 0,59.99994 60,0 0,-59.99994 z"
+       id="path3852"
+       inkscape:connector-curvature="0" />
+    <svg:path
+       style="fill:none;stroke:#000000;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 79.5,922.86088 60,0 0,60"
+       id="path3903"
+       inkscape:connector-curvature="0" />
+    <svg:path
+       style="fill:none;stroke:#000000;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 10,77.047241 70,-60 0,0"
+       id="path3913"
+       inkscape:connector-curvature="0"
+       transform="translate(0,905.31364)" />
+    <svg:path
+       style="fill:none;stroke:#000000;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="m 140,17.047241 -70,60"
+       id="path3915"
+       inkscape:connector-curvature="0"
+       transform="translate(0,905.31364)" />
+    <svg:path
+       style="fill:none;stroke:#000000;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+       d="M 140,77.047241 70,137.04724"
+       id="path3917"
+       inkscape:connector-curvature="0"
+       transform="translate(0,905.31364)" />
+  </svg:g>
+  <link
+     href="resource://mytube-at-ashishmishra-dot-in/smartvideo_for_youtube/data/mytube.css"
+     rel="stylesheet"
+     type="text/css" />
+</svg:svg>
