@@ -27,7 +27,7 @@ clean:
 # $* expands to the target stem (lattice_matcher)
 # https://www.gnu.org/software/make/manual/html_node/Automatic-Variables.html
 %.pdf: %.tex $(PDFS)
-	latexmk -pdf -g -silent -pdflatex="pdflatex -interaction=nonstopmode -synctex=1 %O %S" "$*"
+	latexmk -pdf -g -silent -f -pdflatex="pdflatex -interaction=nonstopmode -synctex=1 %O %S" "$*"
 
 # Convert SVGs to PDFs
 # $< expands to the first prerequisite (graphics/raw/%.svg)
